@@ -4,17 +4,22 @@
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 
+$link = mysqli_connect("xxxx", "xxxx", "xxxx", "xxxx");
+// echo"<!DOCTYPE html>";
+// require_once("config.php"); 
+// Database::connect();
 echo"<!DOCTYPE html>";
 
-$link = mysqli_connect("XXXX", "XXX", "XXXX","XXXXX");
+
 //  echo mysqli_connect_error();
  session_start(); 
 //$message="";
-$allowedTypes = array("mp3"); 
+$allowedTypes = array("mp4","mp3","avi","flv","wav"); 
 
 
 
-$directory = "./fileconverter";
+$directory = "../fileconverter/";
+
 global $theFile;
 global $trackFileType;
 
@@ -70,7 +75,7 @@ if(isset($_POST['submit'])){
 	echo gettype($trackFileType);
 
 	if(!in_array($trackFileType, $allowedTypes)){
-		$message .= "<br>Sorry, only mp4 files are allowed.";
+		$message .= "<br>Sorry, only audio files are allowed.";
 	}
 
 //	echo "type is ". $type."<br>";
@@ -89,11 +94,11 @@ if(isset($_POST['submit'])){
 			$message="File uploaded successfully";
 			//exec("/var/www/steelpanwebsite.com/public_html/Uploads/workbench/test.sh 2>&1",$output);
 			//shell_exec("/var/www/steelpanwebsite.com/public_html/Uploads/workbench/test.sh");
-			// exec("cd Uploads/workbench && bash ./hello.sh");
+			exec("cd Uploads/workbench && bash ./hello.sh");
 
-			//  	if($trackFileType != "mp4"){
-			//  	exec("cd Uploads/workbench && find . -type f -name '*.".$trackFileType."' -delete");
-			 //}
+			 	if($trackFileType != "mp4"){
+			 	exec("cd Uploads/workbench && find . -type f -name '*.".$trackFileType."' -delete");
+			 }
 
 
 			//print_r($output);  // to see the respond to your command
@@ -117,6 +122,90 @@ if(isset($_POST['submit'])){
 	echo $message; 
 }
 
+if(isset($_POST['chain'])){
+	$query3 = "SELECT * FROM `workbench`";
+	$result3 = mysqli_query($link, $query3);
+
+	$num_rows = mysqli_num_rows($result3);
+
+	//echo $result3;
+
+	if($num_rows < 2){
+		echo "You need another at least 2 tracks to create chain. Upload some more.";
+		echo $num_rows;
+	}
+	else{
+
+		//$chainCommand = "cat *.mp3 > chain.mp3";
+
+		$output = exec(("cd Uploads/workbench && bash ./merge.sh")); 
+		
+		$query7 = "SELECT * FROM `allChains`"; 
+		$result4 = mysqli_query($link, $query7);
+
+		//$query10 = "SELECT LAST_INSERT_ID()";
+		//$result = mysqli_query($link, $query10);
+
+
+	//	$row = mysqli_fetch_array($result4);
+
+		$row = mysqli_num_rows($result4) +1 ; 
+
+		//$chainId = $row['id'] + 1;
+
+		$chainId = $row; 
+
+		//Inserting the new chain url into the database
+		$output=exec("cd /var/www/steelpanwebsite.com/public_html/Uploads/workbench && mv chain.mp4 /var/www/steelpanwebsite.com/public_html/Uploads/chains/chain".$chainId.".mp4 2>&1",$output );
+		print_r($output);
+	//	$path = '/var/www/steelpanwebsite.com/public_html/Uploads/chains'. mysqli_insert_id($link).'.mp4';
+		$path = './Uploads/chains/chain'. $chainId .'.mp4';
+
+		//rename('/var/www/steelpanwebsite.com/public_html/Uploads/chains', $path);
+
+	//	cd /var/www/steelpanwebsite.com/public_html/Uploads/workbench && mv chains.mp4 /var/www/steelpanwebsite.com/public_html/Uploads/chains/chain4.mp4
+
+
+		$query4 = "INSERT INTO `allChains` (`path`) VALUES ('".$path ."')";
+		$result = mysqli_query($link, $query4);
+
+		$query9 = "INSERT INTO `allTracks` SELECT * FROM `workbench`";
+		$result = mysqli_query($link,$query9);
+
+		$query11 = "UPDATE `allTracks` SET `path` = replace(path, 'workbench', 'allTracks')";
+		$result = mysqli_query($link,$query11);
+
+
+		$query8 = "DELETE FROM `workbench`";
+		$result = mysqli_query($link,$query8);
+
+		// //moving the new chain to the chains folder. 
+		// $output = shell_exec("cd Uploads/workbench && mv 
+
+		// $query5 = "DELETE * FROM `workbench`";
+		// $result = mysqli_query($link,$query5);
+
+		// if($trackFileType){
+		 //	$output = shell_exec(("cd /var/www/steelpanwebsite.com/public_html/Uploads/workbench &&  mv *.".$trackFileType."/var/www/steelpanwebsite.com/public_html/Uploads/allTracks"));
+		// }
+
+			$output = shell_exec(("cd /var/www/steelpanwebsite.com/public_html/Uploads/workbench && bash ./moveTracks.sh"));
+
+		 print_r($output);
+
+
+
+	}
+
+
+}
+
+
+
+
+
+
+
 
 
 
@@ -137,7 +226,7 @@ if(isset($_POST['submit'])){
 	<h3>Convert your mp3 file to a mp4</h3> 
 
 	<h3>Upload your mp3 file</h3>
-	<form action="converFile.php" method="post" enctype="multipart/form-data">
+	<form action="convert.php" method="post" enctype="multipart/form-data">
     	Select Track to upload:<br>
 	    <input type="file" name="fileUpload" id="fileToUpload"><br>
 	    <input type="submit" value="Upload Track" name="submit">
