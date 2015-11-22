@@ -4,7 +4,7 @@
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 // $link = mysqli_connect("xxxx", "xxxx", "xxxx", "xxxx");
-
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
 echo"<!DOCTYPE html>";
@@ -13,14 +13,21 @@ echo"<!DOCTYPE html>";
 //$message="";
 $allowedTypes = array("mp4","mp3","avi","flv","wav"); 
 $directory = "../fileconverter/";
+$image = "no";
+
 global $theFile;
 global $trackFileType;
+global $fileWithoutExtension;
+global $tempName;
+
 if(isset($_POST['submit'])){
 //	echo $user->getLink();
 	
 	$tempName = $_FILES['fileUpload']['tmp_name'];
 	$theFile = $_FILES['fileUpload']['name'];
 	
+	$fileWithoutExtension=substr($theFile,0,-4);
+
 	$type = $_FILES['fileUpload']['type']; 
 //	echo "type is ". $type."<br>";
 	// $target_file = $_SERVER['DOCUMENT_ROOT']. $directory . basename($theFile);
@@ -76,7 +83,9 @@ if(isset($_POST['submit'])){
 }
 
 if(isset($_POST['Upload'])){
-	echo "prining";
+
+	$image ="yes";
+
 	$tempName = $_FILES['image']['tmp_name'];
 	$theFile = $_FILES['image']['name'];
 	
@@ -123,6 +132,14 @@ if(isset($_POST['Upload'])){
 }
 	
 
+if(isset($_POST['convert'])){
+	if($image=="no"){
+		$defaultConversion = "ffmpeg -loop 1 -i image.jpg -i " .$theFile." -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest " . $fileWithoutExtension.".mp4";
+		exec("cd fileconverter && " .$defaultConversion);
+	}
+
+
+}
 
 
 function getFileUploadError($error){
