@@ -7,6 +7,7 @@ error_reporting(E_ALL);
 $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
+
 echo"<!DOCTYPE html>";
 
  session_start(); 
@@ -26,6 +27,7 @@ if(isset($_POST['submit'])){
 	$tempName = $_FILES['fileUpload']['tmp_name'];
 	$theFile = $_FILES['fileUpload']['name'];
 	
+	echo "The name of the file is ".$theFile."<br>";
 	$fileWithoutExtension=substr($theFile,0,-4);
 
 	$type = $_FILES['fileUpload']['type']; 
@@ -64,14 +66,16 @@ if(isset($_POST['submit'])){
 	if(!isset($message)){
 		$index = 1; 
 		if(move_uploaded_file($tempName, $directory ."/".$theFile)){
-			$theFile = str_replace($trackFileType, "mp4", $theFile); 
+			//$theFile = str_replace($trackFileType, "mp4", $theFile); 
 			$path = $directory ."/".$theFile;
 			$path2 = $directory ."/". $theFile;
 			//echo $path2;
 			$message="File uploaded successfully";
 			
-			$query = "INSERT INTO `workbench` (`path`) VALUES ('". $path2  ."')";		
-			 $result=mysqli_query($link, $query);
+			$query = "INSERT INTO `filesToConvert` (`fileName`) VALUES ('". $theFile  ."')";		
+			$result=mysqli_query($link, $query);
+
+
 		}
 		else{
 			$error = $_FILES['fileUpload']['error'];
@@ -133,9 +137,28 @@ if(isset($_POST['Upload'])){
 	
 
 if(isset($_POST['convert'])){
+	echo "Convert Pressed";
+	echo "The name of the file is ".$theFile."<br>";
+
+	$query = "SELECT * FROM `filesToConvert` WHERE `id` = (SELECT MAX(ID) FROM `filesToConvert`)";	
+	$result=mysqli_query($link, $query);
+	$row = mysqli_fetch_array($result);
+
+	$theFile=$row['fileName'];
+	$fileWithoutExtension=substr($theFile,0,-4);
+
+	//echo $theFile;
 	if($image=="no"){
-		$defaultConversion = "ffmpeg -loop 1 -i image.jpg -i " .$theFile." -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest " . $fileWithoutExtension.".mp4";
-		exec("cd fileconverter && " .$defaultConversion);
+
+
+		if(function_exists('exec')) {
+		    echo "exec is enabled";
+		}
+
+		$defaultConversion = "ffmpeg -loop 1 -i image.jpg -i " . $theFile." -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest " . $fileWithoutExtension.".mp4";
+		echo $defaultConversion;
+		//exec("cd fileconverter && " .$defaultConversion);
+		exec("cd fileconverter && mkdir blah");
 	}
 
 
