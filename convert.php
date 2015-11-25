@@ -4,8 +4,8 @@
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 // $link = mysqli_connect("xxxx", "xxxx", "xxxx", "xxxx");
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
 echo"<!DOCTYPE html>";
@@ -155,10 +155,10 @@ if(isset($_POST['convert'])){
 		    echo "exec is enabled";
 		}
 
-		$defaultConversion = "ffmpeg -loop 1 -i image.jpg -i " . $theFile." -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest " . $fileWithoutExtension.".mp4";
+		$defaultConversion = "ffmpeg -loop 1 -i image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest \"" . $fileWithoutExtension."\".mp4";
 		echo $defaultConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
-		exec("cd fileconverter && mkdir blah");
+		exec($defaultConversion);
 	}
 
 
