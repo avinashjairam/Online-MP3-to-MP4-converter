@@ -3,9 +3,10 @@
 <?php
 ini_set('display_errors',1);
 error_reporting(E_ALL);
-// $link = mysqli_connect("xxxx", "xxxx", "xxxx", "xxxx");
 
 $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
+
 
 
 echo"<!DOCTYPE html>";
@@ -123,7 +124,7 @@ if(isset($_POST['Upload'])){
 		if(move_uploaded_file($tempName, $directory ."/".$theFile)){
 			$path = $directory ."/".$theFile;
 			$message="File uploaded successfully";
-		$query = "INSERT INTO `allPics` (`path`) VALUES ('". $path  ."')";		
+		$query = "INSERT INTO `mp4Pics` (`pic`) VALUES ('". $theFile  ."')";		
 		 $result=mysqli_query($link, $query);
 		}
 		else{
@@ -144,21 +145,35 @@ if(isset($_POST['convert'])){
 	$result=mysqli_query($link, $query);
 	$row = mysqli_fetch_array($result);
 
+
 	$theFile=$row['fileName'];
 	$fileWithoutExtension=substr($theFile,0,-4);
 
+	$imageQuery = "SELECT * FROM `mp4Pics` WHERE `id` = (SELECT MAX(ID) FROM `mp4Pics`)";	
+	$imageResult= mysqli_query($link, $imageQuery);
+	$imageRow = mysqli_fetch_array($imageResult);
+
+	$image = $imageRow['pic'];
 	//echo $theFile;
 	if($image=="no"){
 
 
-		if(function_exists('exec')) {
-		    echo "exec is enabled";
-		}
+		// if(function_exists('exec')) {
+		//     echo "exec is enabled";
+		// }
 
 		$defaultConversion = "ffmpeg -loop 1 -i image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest \"" . $fileWithoutExtension."\".mp4";
 		echo $defaultConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($defaultConversion);
+	}
+	else{
+		$imageConversion = "ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest \"" . $fileWithoutExtension."\".mp4";
+		echo $imageConversion;
+		//exec("cd fileconverter && " .$defaultConversion);
+		exec($imageConversion);
+
+
 	}
 
 
