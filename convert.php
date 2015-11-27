@@ -4,8 +4,8 @@
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 
+//Insert Database connection
 $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
-
 
 
 
@@ -137,6 +137,7 @@ if(isset($_POST['Upload'])){
 }
 	
 
+
 if(isset($_POST['convert'])){
 	echo "Convert Pressed";
 	echo "The name of the file is ".$theFile."<br>";
@@ -153,7 +154,7 @@ if(isset($_POST['convert'])){
 	$imageResult= mysqli_query($link, $imageQuery);
 	$imageRow = mysqli_fetch_array($imageResult);
 
-	$image = $imageRow['pic'];
+	$image = $imageRow['pic'];//HUGE MISTAKE HERE, IMPROPER USE OF VARIABLES 
 	//echo $theFile;
 	if($image=="no"){
 
@@ -162,14 +163,14 @@ if(isset($_POST['convert'])){
 		//     echo "exec is enabled";
 		// }
 
-		$defaultConversion = "ffmpeg -loop 1 -i image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest \"" . $fileWithoutExtension."\".mp4";
-		echo $defaultConversion;
+		$defaultConversion = "ffmpeg -loop 1 -i image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
+		echo "no " .$defaultConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($defaultConversion);
 	}
 	else{
-		$imageConversion = "ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest \"" . $fileWithoutExtension."\".mp4";
-		echo $imageConversion;
+		$imageConversion = "ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
+		echo "yes ". $imageConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($imageConversion);
 
@@ -224,9 +225,9 @@ function checkAllowedTypes($type){
 	<h3>Would you like to add your own image to the mp4?</h3>
 	
 	<form>
-	  <input id="no" type="radio" name="image" value="male" checked onchange="showImageUpload(this)"> No
+	  <input id="no" type="radio" name="image" value="no" checked onchange="showImageUpload(this)"> No
 	  <br>
-	  <input id="yes" type="radio" name="image" value="female" onchange="showImageUpload(this)"> Yes
+	  <input id="yes" type="radio" name="image" value="yes" onchange="showImageUpload(this)"> Yes
 	</form>
 
 	<br><br>
