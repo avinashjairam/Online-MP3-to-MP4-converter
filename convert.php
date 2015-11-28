@@ -15,12 +15,12 @@ echo"<!DOCTYPE html>";
 //$message="";
 $allowedTypes = array("mp4","mp3","avi","flv","wav"); 
 $directory = "../fileconverter/";
-$image = "no";
 
 global $theFile;
 global $trackFileType;
 global $fileWithoutExtension;
 global $tempName;
+
 
 if(isset($_POST['submit'])){
 //	echo $user->getLink();
@@ -126,6 +126,8 @@ if(isset($_POST['Upload'])){
 			$message="File uploaded successfully";
 		$query = "INSERT INTO `mp4Pics` (`pic`) VALUES ('". $theFile  ."')";		
 		 $result=mysqli_query($link, $query);
+		$query =  "INSERT INTO `withImage` (`ifImage`) VALUES (TRUE)";	
+		$result=mysqli_query($link, $query);
 		}
 		else{
 			$error = $_FILES['image']['error'];
@@ -155,8 +157,14 @@ if(isset($_POST['convert'])){
 	$imageRow = mysqli_fetch_array($imageResult);
 
 	$image = $imageRow['pic'];//HUGE MISTAKE HERE, IMPROPER USE OF VARIABLES 
+
+	$useImage = "SELECT * FROM `withImage` WHERE `id` = (SELECT MAX(ID) FROM `withImage`)";
+	$imageResult= mysqli_query($link, $useImage);
+	$imageRow = mysqli_fetch_array($imageResult);
+
+	$doImage = $imageRow['ifImage'];
 	//echo $theFile;
-	if($image=="no"){
+	if($doImage==FALSE){
 
 
 		// if(function_exists('exec')) {
@@ -224,10 +232,10 @@ function checkAllowedTypes($type){
 
 	<h3>Would you like to add your own image to the mp4?</h3>
 	
-	<form>
-	  <input id="no" type="radio" name="image" value="no" checked onchange="showImageUpload(this)"> No
+	<form action="convert.php" method="post">
+	  <input id="no" type="radio" name="imageNo" value="no" checked onchange="showImageUpload(this)"> No
 	  <br>
-	  <input id="yes" type="radio" name="image" value="yes" onchange="showImageUpload(this)"> Yes
+	  <input id="yes" type="radio" name="imageYes" value="yes" onchange="showImageUpload(this)"> Yes
 	</form>
 
 	<br><br>
@@ -249,6 +257,7 @@ function checkAllowedTypes($type){
 			document.getElementById('imageUpload').style.visibility=e.checked && e.id =='yes' ? 'visible' : 'hidden';			
 		}
 
+		
 	</script>	
 	
 
