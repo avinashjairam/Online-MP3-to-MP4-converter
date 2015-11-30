@@ -124,10 +124,10 @@ if(isset($_POST['Upload'])){
 		if(move_uploaded_file($tempName, $directory ."/".$theFile)){
 			$path = $directory ."/".$theFile;
 			$message="File uploaded successfully";
-		$query = "INSERT INTO `mp4Pics` (`pic`) VALUES ('". $theFile  ."')";		
-		 $result=mysqli_query($link, $query);
-		$query =  "INSERT INTO `withImage` (`ifImage`) VALUES (TRUE)";	
-		$result=mysqli_query($link, $query);
+			$query = "INSERT INTO `mp4Pics` (`pic`) VALUES ('". $theFile  ."')";		
+			$result=mysqli_query($link, $query);
+			$query =  "INSERT INTO `withImage` (`ifImage`) VALUES (TRUE)";	
+			$result=mysqli_query($link, $query);
 		}
 		else{
 			$error = $_FILES['image']['error'];
@@ -162,10 +162,23 @@ if(isset($_POST['convert'])){
 	$imageResult= mysqli_query($link, $useImage);
 	$imageRow = mysqli_fetch_array($imageResult);
 
-	$doImage = $imageRow['ifImage'];
+	//$doImage = $imageRow['ifImage'];
 	//echo $theFile;
-	if($doImage==FALSE){
-
+	$query = "SELECT * FROM withImage";
+	$imageResult = mysqli_query($link,$query);
+	$num_rows 	 = mysqli_num_rows($imageResult);
+	//$go = 0;
+	$currentId = $imageRow['ifImage'];
+	
+	if($num_rows == 0){
+		$go = 0;
+		echo "go is ". $go;
+	}
+	else{
+		$go = 1; 
+	}
+	
+	if($go == 0){
 
 		// if(function_exists('exec')) {
 		//     echo "exec is enabled";
@@ -181,6 +194,11 @@ if(isset($_POST['convert'])){
 		echo "yes ". $imageConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($imageConversion);
+
+		$query = "DELETE FROM `withImage` WHERE `id` = `". $currentId ."`";
+		echo "<br>".$query;
+		mysqli_query($link, $query);
+		//$imageRow = mysqli_fetch_array($imageResult);
 
 
 	}
