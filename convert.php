@@ -187,13 +187,26 @@ if(isset($_POST['convert'])){
 		$defaultConversion = "ffmpeg -loop 1 -i image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
 		echo "no " .$defaultConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
-		exec($defaultConversion);
+		exec($defaultConversion, $output,$return);
+			echo " Return is ". $return;
+		if($return==0){
+			echo "blahasddddddddddddddddddd";
+			echo "<h3>Download your file <a http://45.79.163.144/fileconverter/".$fileWithoutExtension.".mp4"." download>here</a></h3>";
+		}
 	}
 	else{
 		$imageConversion = "ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
 		echo "yes ". $imageConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
-		exec($imageConversion);
+		exec($imageConversion, $output,$return);
+
+		echo " Return is ". $return;
+
+		if($return==0){
+			// echo "<h3>Download your file <a http://45.79.163.144/fileconverter/\"".$fileWithoutExtension."\".mp4"." download>here</a></h3>";
+			echo "<h3>Download your file <a http://45.79.163.144/fileconverter/".$fileWithoutExtension.".mp4"." download>here</a></h3>";
+
+		}
 
 		$query = "DELETE FROM `withImage` WHERE `id` = ". $currentId ;
 		echo "<br>".$query;
