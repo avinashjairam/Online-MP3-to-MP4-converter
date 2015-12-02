@@ -168,7 +168,7 @@ if(isset($_POST['convert'])){
 	$imageResult = mysqli_query($link,$query);
 	$num_rows 	 = mysqli_num_rows($imageResult);
 	//$go = 0;
-	$currentId = $imageRow['ifImage'];
+	$currentId = $imageRow['id'];
 	
 	if($num_rows == 0){
 		$go = 0;
@@ -195,7 +195,7 @@ if(isset($_POST['convert'])){
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($imageConversion);
 
-		$query = "DELETE FROM `withImage` WHERE `id` = `". $currentId ."`";
+		$query = "DELETE FROM `withImage` WHERE `id` = ". $currentId ;
 		echo "<br>".$query;
 		mysqli_query($link, $query);
 		//$imageRow = mysqli_fetch_array($imageResult);
@@ -251,9 +251,9 @@ function checkAllowedTypes($type){
 	<h3>Would you like to add your own image to the mp4?</h3>
 	
 	<form action="convert.php" method="post">
-	  <input id="no" type="radio" name="imageNo" value="no" checked onchange="showImageUpload(this)"> No
+	  <input id="no" type="radio" name="image" value="no" checked onchange="showImageUpload(this)"> No
 	  <br>
-	  <input id="yes" type="radio" name="imageYes" value="yes" onchange="showImageUpload(this)"> Yes
+	  <input id="yes" type="radio" name="image" value="yes" onchange="showImageUpload(this)"> Yes
 	</form>
 
 	<br><br>
