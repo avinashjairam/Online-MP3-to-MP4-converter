@@ -5,8 +5,8 @@ ini_set('display_errors',1);
 error_reporting(E_ALL);
 
 //Insert Database connection
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
 echo"<!DOCTYPE html>";
@@ -21,14 +21,14 @@ global $trackFileType;
 global $fileWithoutExtension;
 global $tempName;
 
-
+echo '<h3>hi</h3>';
 if(isset($_POST['submit'])){
 //	echo $user->getLink();
-	
+	echo '<h3>hi</h3>';
 	$tempName = $_FILES['fileUpload']['tmp_name'];
 	$theFile = $_FILES['fileUpload']['name'];
 	
-	echo "The name of the file is ".$theFile."<br>";
+	echo "The name of the file is ".$theFile."'<br>'";
 	$fileWithoutExtension=substr($theFile,0,-4);
 
 	$type = $_FILES['fileUpload']['type']; 
@@ -188,11 +188,15 @@ if(isset($_POST['convert'])){
 		echo "no " .$defaultConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($defaultConversion, $output,$return);
-			echo " Return is ". $return;
-		if($return==0){
-			echo "blahasddddddddddddddddddd";
-			echo "<h3>Download your file <a http://45.79.163.144/fileconverter/".$fileWithoutExtension.".mp4"." download>here</a></h3>";
-		}
+			echo "<br>Return is ". $return;
+			echo 'Download';
+
+		if($return==0)
+
+		?>
+			<a href=" http://45.79.163.144/fileconverter/<?php echo $fileWithoutExtension ?>.mp4" download>Download here</a>";
+		<?php 
+		
 	}
 	else{
 		$imageConversion = "ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
@@ -204,7 +208,7 @@ if(isset($_POST['convert'])){
 
 		if($return==0){
 			// echo "<h3>Download your file <a http://45.79.163.144/fileconverter/\"".$fileWithoutExtension."\".mp4"." download>here</a></h3>";
-			echo "<h3>Download your file <a http://45.79.163.144/fileconverter/".$fileWithoutExtension.".mp4"." download>here</a></h3>";
+			echo "<h3>Download your file <a http://45.79.163.144/fileconverter/"; //.$fileWithoutExtension.".mp4"." download>here</a></h3>";
 
 		}
 
