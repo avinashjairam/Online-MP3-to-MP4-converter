@@ -1,5 +1,3 @@
-
-
 <?php
  session_start(); 
  global $sessionId;
@@ -12,42 +10,26 @@
  $sessionId = session_id();
  $changeDirectory = "cd $sessionId && ";
 
-
  echo $sessionId;
-
-
-
 echo $output;
 
 ini_set('display_errors',1);
 error_reporting(E_ALL);
-
-
 //Insert Database connection
+
  $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
-$makeDirectory = "mkdir $sessionId";
-$permission = 0777;
-
-exec($makeDirectory, $permission);
-
-
-
 echo"<!DOCTYPE html>";
-
 //session_start(); 
-
-
-
 //$message="";
 $allowedTypes = array("mp4","mp3","avi","flv","wav"); 
 $directory = "../fileconverter/" . $sessionId;
-
-
-
 echo '<h3>hi</h3>';
 if(isset($_POST['submit'])){
+	$makeDirectory = "mkdir $sessionId";
+$permission = 0777;
+exec($makeDirectory, $permission);
 //	echo $user->getLink();
 	echo '<h3>hi</h3>';
 	$tempName = $_FILES['fileUpload']['tmp_name'];
@@ -55,7 +37,6 @@ if(isset($_POST['submit'])){
 	
 	echo "The name of the file is ".$theFile."'<br>'";
 	$fileWithoutExtension=substr($theFile,0,-4);
-
 	$type = $_FILES['fileUpload']['type']; 
 //	echo "type is ". $type."<br>";
 	// $target_file = $_SERVER['DOCUMENT_ROOT']. $directory . basename($theFile);
@@ -100,8 +81,6 @@ if(isset($_POST['submit'])){
 			
 			$query = "INSERT INTO `filesToConvert` (`fileName`) VALUES ('". $theFile  ."')";		
 			$result=mysqli_query($link, $query);
-
-
 		}
 		else{
 			$error = $_FILES['fileUpload']['error'];
@@ -111,24 +90,17 @@ if(isset($_POST['submit'])){
 	}
 	echo $message; 
 }
-
 if(isset($_POST['Upload'])){
 //	 exec('mkdir $sessionId',$output,$result);
-
-
 	$image ="yes";
-
 	$tempName = $_FILES['image']['tmp_name'];
 	$theFile = $_FILES['image']['name'];
 	
 	$type = $_FILES['image']['type']; 
-
 	// $target_file = $_SERVER['DOCUMENT_ROOT']. $directory . basename($theFile);
 	$target_file = $directory ."/". basename($_FILES["image"]["name"]);
 	$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 	$check = getimagesize($tempName);
-
-
 	if($check == false) {
         $message = "File is not an image";
     } 
@@ -145,7 +117,6 @@ if(isset($_POST['Upload'])){
 	    $message .= "<br>Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
 	    
 	}
-
     
 	if(!isset($message)){
 		if(move_uploaded_file($tempName, $directory ."/".$theFile)){
@@ -161,34 +132,24 @@ if(isset($_POST['Upload'])){
 			$message =getFileUploadError($error);
 		}
 	}
-
 	echo $message; 
 }
 	
-
-
 if(isset($_POST['convert'])){
 	echo "Convert Pressed";
 	echo "The name of the file is ".$theFile."<br>";
-
 	$query = "SELECT * FROM `filesToConvert` WHERE `id` = (SELECT MAX(ID) FROM `filesToConvert`)";	
 	$result=mysqli_query($link, $query);
 	$row = mysqli_fetch_array($result);
-
-
 	$theFile=$row['fileName'];
 	$fileWithoutExtension=substr($theFile,0,-4);
-
 	$imageQuery = "SELECT * FROM `mp4Pics` WHERE `id` = (SELECT MAX(ID) FROM `mp4Pics`)";	
 	$imageResult= mysqli_query($link, $imageQuery);
 	$imageRow = mysqli_fetch_array($imageResult);
-
 	$image = $imageRow['pic'];//HUGE MISTAKE HERE, IMPROPER USE OF VARIABLES 
-
 	$useImage = "SELECT * FROM `withImage` WHERE `id` = (SELECT MAX(ID) FROM `withImage`)";
 	$imageResult= mysqli_query($link, $useImage);
 	$imageRow = mysqli_fetch_array($imageResult);
-
 	//$doImage = $imageRow['ifImage'];
 	//echo $theFile;
 	$query = "SELECT * FROM withImage";
@@ -206,22 +167,18 @@ if(isset($_POST['convert'])){
 	}
 	
 	if($go == 0){
-
 		// if(function_exists('exec')) {
 		//     echo "exec is enabled";
 		// }
-
 		$defaultConversion = "$changeDirectory ffmpeg -loop 1 -i ../image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
 		echo "no " .$defaultConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($defaultConversion, $output,$return);
 			echo "<br>Return is ". $return;
 			echo 'Download';
-
 		if($return==0)
-
 		?>
-			<a href=" http://45.79.163.144/fileconverter/<?php echo $fileWithoutExtension ?>.mp4" download>Download here</a>";
+			<a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>";
 		<?php 
 		
 	}
@@ -230,27 +187,18 @@ if(isset($_POST['convert'])){
 		echo "yes ". $imageConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($imageConversion, $output,$return);
-
 		echo " Return is ". $return;
-
-		if($return==0){
-			// echo "<h3>Download your file <a http://45.79.163.144/fileconverter/\"".$fileWithoutExtension."\".mp4"." download>here</a></h3>";
-			echo "<h3>Download your file <a http://45.79.163.144/fileconverter/"; //.$fileWithoutExtension.".mp4"." download>here</a></h3>";
-
-		}
-
+		if($return==0)			
+			?>
+		<a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>";
+			
+		<?php
 		$query = "DELETE FROM `withImage` WHERE `id` = ". $currentId ;
 		echo "<br>".$query;
 		mysqli_query($link, $query);
 		//$imageRow = mysqli_fetch_array($imageResult);
-
-
 	}
-
-
 }
-
-
 function getFileUploadError($error){
 		$uploadError = array( 
 			UPLOAD_ERR_OK 			=> "There is no error.",
@@ -264,16 +212,11 @@ function getFileUploadError($error){
 		);
 		return $uploadError[$error];
 }
-
 function session_valid_id($session_id){
     return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $session_id) > 0;
 }
-
-
 function checkAllowedTypes($type){
-
 }
-
 ?>
 
 
@@ -321,7 +264,6 @@ function checkAllowedTypes($type){
 		function showImageUpload(e){
 			document.getElementById('imageUpload').style.visibility=e.checked && e.id =='yes' ? 'visible' : 'hidden';			
 		}
-
 		
 	</script>	
 	
