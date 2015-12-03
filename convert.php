@@ -1,25 +1,50 @@
 
 
 <?php
+ session_start(); 
+ global $sessionId;
+ global $theFile;
+ global $trackFileType;
+ global $fileWithoutExtension;
+ global $tempName;
+ global $changeDirectory; 
+
+ $sessionId = session_id();
+ $changeDirectory = "cd $sessionId && ";
+
+
+ echo $sessionId;
+
+
+
+echo $output;
+
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 
-//Insert Database connection
 
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+//Insert Database connection
+ $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
+
+$makeDirectory = "mkdir $sessionId";
+$permission = 0777;
+
+exec($makeDirectory, $permission);
+
 
 
 echo"<!DOCTYPE html>";
 
- session_start(); 
+//session_start(); 
+
+
+
 //$message="";
 $allowedTypes = array("mp4","mp3","avi","flv","wav"); 
-$directory = "../fileconverter/";
+$directory = "../fileconverter/" . $sessionId;
 
-global $theFile;
-global $trackFileType;
-global $fileWithoutExtension;
-global $tempName;
+
 
 echo '<h3>hi</h3>';
 if(isset($_POST['submit'])){
@@ -88,6 +113,8 @@ if(isset($_POST['submit'])){
 }
 
 if(isset($_POST['Upload'])){
+//	 exec('mkdir $sessionId',$output,$result);
+
 
 	$image ="yes";
 
@@ -184,7 +211,7 @@ if(isset($_POST['convert'])){
 		//     echo "exec is enabled";
 		// }
 
-		$defaultConversion = "ffmpeg -loop 1 -i image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
+		$defaultConversion = "$changeDirectory ffmpeg -loop 1 -i ../image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
 		echo "no " .$defaultConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($defaultConversion, $output,$return);
@@ -199,7 +226,7 @@ if(isset($_POST['convert'])){
 		
 	}
 	else{
-		$imageConversion = "ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
+		$imageConversion = "$changeDirectory ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
 		echo "yes ". $imageConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($imageConversion, $output,$return);
@@ -236,8 +263,11 @@ function getFileUploadError($error){
 			UPLOAD_ERR_EXTENSION	=> "A PHP extension stopped the file upload."
 		);
 		return $uploadError[$error];
-	}
+}
 
+function session_valid_id($session_id){
+    return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $session_id) > 0;
+}
 
 
 function checkAllowedTypes($type){
