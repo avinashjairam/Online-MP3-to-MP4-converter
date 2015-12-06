@@ -1,11 +1,23 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script>
+// 	$('#myModal').modal({ show: false})
+ </script>
+
+
 <?php
  session_start(); 
+
+ $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
  global $sessionId;
  global $theFile;
  global $trackFileType;
  global $fileWithoutExtension;
  global $tempName;
  global $changeDirectory; 
+
+
 
  $sessionId = session_id();
  $changeDirectory = "cd $sessionId && ";
@@ -17,13 +29,13 @@ ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
 
- $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
-echo"<!DOCTYPE html>";
+
+//echo"<!DOCTYPE html>";
 //session_start(); 
 //$message="";
-$allowedTypes = array("mp4","mp3","avi","flv","wav"); 
+$allowedTypes = array("mp3","avi","flv","wav"); 
 $directory = "../fileconverter/" . $sessionId;
 echo '<h3>hi</h3>';
 if(isset($_POST['submit'])){
@@ -170,7 +182,7 @@ if(isset($_POST['convert'])){
 		// if(function_exists('exec')) {
 		//     echo "exec is enabled";
 		// }
-		$defaultConversion = "$changeDirectory ffmpeg -loop 1 -i ../image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
+		$defaultConversion = "$changeDirectory ffmpeg -loop 1 -i ../image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 -pix_fmt yuv420p \"" . $fileWithoutExtension."\".mp4";
 		echo "no " .$defaultConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($defaultConversion, $output,$return);
@@ -178,19 +190,43 @@ if(isset($_POST['convert'])){
 			echo 'Download';
 		if($return==0)
 		?>
-			<a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>";
+			<!-- <a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"; -->
+
+			<!-- This link opens in a new tab but the download link doesn't work -->
+			<!-- <a href="#" onclick="window.open('http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4','_blank');window.close();return false" target="_blank" download>Download here</a>"; -->
 		<?php 
 		
 	}
 	else{
-		$imageConversion = "$changeDirectory ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 \"" . $fileWithoutExtension."\".mp4";
+		$imageConversion = "$changeDirectory ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 -pix_fmt yuv420p \"" . $fileWithoutExtension."\".mp4";
 		echo "yes ". $imageConversion;
 		//exec("cd fileconverter && " .$defaultConversion);
 		exec($imageConversion, $output,$return);
 		echo " Return is ". $return;
 		if($return==0)			
 			?>
-		<a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>";
+		<!-- <a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"; -->
+		<script>
+			$('#myModal').modal('show');
+		</script> 
+
+		<div id="myModal" class="modal fade" role="dialog">
+  			<div class="modal-dialog">
+			    <!-- Modal content-->
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			        <h4 class="modal-title">Download your mp4!</h4>
+			      </div>
+			      <div class="modal-body">
+			        <a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>";
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+ 		 	</div>
+		</div>
 			
 		<?php
 		$query = "DELETE FROM `withImage` WHERE `id` = ". $currentId ;
