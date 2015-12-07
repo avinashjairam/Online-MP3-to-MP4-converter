@@ -1,14 +1,18 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
 
 <script>
-// 	$('#myModal').modal({ show: false})
- </script>
+
+
+</script>
 
 
 <?php
  session_start(); 
 
- $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
 
  global $sessionId;
  global $theFile;
@@ -28,7 +32,7 @@ echo $output;
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
-
+ $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
 
@@ -190,10 +194,23 @@ if(isset($_POST['convert'])){
 			echo 'Download';
 		if($return==0)
 		?>
-			<!-- <a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"; -->
 
+
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		
+
+	
+	
+			
+			<a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"
+ 
 			<!-- This link opens in a new tab but the download link doesn't work -->
 			<!-- <a href="#" onclick="window.open('http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4','_blank');window.close();return false" target="_blank" download>Download here</a>"; -->
+	
+
+
 		<?php 
 		
 	}
@@ -260,6 +277,17 @@ function checkAllowedTypes($type){
 
 <head>
 <title>MP3 to MP4 Converter</title>
+
+
+<script>
+	// window.onload = function(){
+	// 	if(document.getElementById("myModal")){
+	// 		document.getElementById("myModal").style.display="";
+	// 	}
+	// }
+
+ </script>
+
 </head>
 
 <body>
