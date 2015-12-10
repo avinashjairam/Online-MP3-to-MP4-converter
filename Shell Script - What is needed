@@ -1,0 +1,7 @@
+1. The shell script needs to select all of the records in the sessionId MySQl table. 
+
+2. It needs to compare the timestamps of the all of the sessionIds and determine which ones are older than 10 minutes.
+
+3. It needs to delete such folders from the server and from the MySQL database. 
+
+
