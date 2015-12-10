@@ -22,17 +22,31 @@
  global $changeDirectory; 
 
 
+$inactive = 10;
+
+$sessionLife = time() - $_session['timeout'];
+//echo $sessionLife."<br>";
+
+if($sessionLife > $inactive){
+	//echo"<script>alert('session timeout');</script>";
+}
+
+$_session['timeout'] = time();
+
+
+//echo $_session['timeout'];
 
  $sessionId = session_id();
  $changeDirectory = "cd $sessionId && ";
 
- echo $sessionId;
-echo $output;
+// echo $sessionId;
+//echo $output;
 
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
- $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
 
 
 
@@ -44,8 +58,16 @@ $directory = "../fileconverter/" . $sessionId;
 echo '<h3>hi</h3>';
 if(isset($_POST['submit'])){
 	$makeDirectory = "mkdir $sessionId";
-$permission = 0777;
-exec($makeDirectory, $permission);
+	$permission = 0777;
+
+	exec($makeDirectory, $permission);
+
+	$query = "INSERT INTO `sessionInfo` (`sessionId`) VALUES ('$sessionId')";
+	echo $query;
+	$result=mysqli_query($link, $query);
+
+	echo $result;
+
 //	echo $user->getLink();
 	echo '<h3>hi</h3>';
 	$tempName = $_FILES['fileUpload']['tmp_name'];
@@ -197,14 +219,9 @@ if(isset($_POST['convert'])){
 
 
 		
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-		
 
-	
-	
 			
-			<a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"
+		<a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"
  
 			<!-- This link opens in a new tab but the download link doesn't work -->
 			<!-- <a href="#" onclick="window.open('http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4','_blank');window.close();return false" target="_blank" download>Download here</a>"; -->
