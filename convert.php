@@ -45,7 +45,6 @@ $_session['timeout'] = time();
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
 
