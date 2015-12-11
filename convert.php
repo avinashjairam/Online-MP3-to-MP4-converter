@@ -11,8 +11,8 @@
  global $tempName;
  global $changeDirectory; 
 
- $result="";
-$message="";
+$result="";
+global $message;
 
 $inactive = 10;
 
@@ -29,9 +29,9 @@ $_session['timeout'] = time();
 //echo $_session['timeout'];
 
  $sessionId = session_id();
- $_session['id']= $sessionId;
+ $_SESSION['id'] ;
 
- echo $_session['id'];
+echo $_SESSION['id'];
 
  //echo $sessionId;
  $changeDirectory = "cd $sessionId && ";
@@ -44,26 +44,25 @@ error_reporting(E_ALL);
 //Insert Database connection
 $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
-
-//echo"<!DOCTYPE html>";
-//session_start(); 
-//$message="";
 $allowedTypes = array("mp3","avi","flv","wav"); 
 $directory = "../fileconverter/" . $sessionId;
 echo '<h3>hi</h3>';
+
+
 if(isset($_POST['submit'])){
 	$makeDirectory = "mkdir $sessionId";
 	$permission = 0700;
 
 	
 		//echo ;
-
+	if(!isset($_SESSION['id'])){
 		exec($makeDirectory, $permission);//$_SESSION['id']
 		$query = "INSERT INTO `sessionInfo` (`sessionId`) VALUES ('$sessionId')";
 		echo $query;
 		$result=mysqli_query($link, $query);
 
 		$_SESSION['id'] = $sessionId;
+	}
 
 			//echo ("{$_SESSION['id']}");
 	
@@ -130,6 +129,11 @@ if(isset($_POST['submit'])){
 	}
 	echo $message; 
 }
+
+
+
+
+
 if(isset($_POST['Upload'])){
 //	 exec('mkdir $sessionId',$output,$result);
 	$image ="yes";
