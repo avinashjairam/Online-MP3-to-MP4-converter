@@ -2,14 +2,34 @@
 
 	$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
-	$currentTimeStampQuery = "SELECT CURRENT_TIMESTAMP";
+	$sessionToDelete = [];
+
+	$currentTimeStampQuery = "SELECT * FROM `sessionInfo` WHERE `timeCreated` < (NOW() - INTERVAL 1 MINUTE)";
 	$result =  mysqli_query($link, $currentTimeStampQuery);
-	$row    =  mysqli_fetch_array($result);
+
+	//echo $result;
+	if(mysqli_num_rows($result) > 0){
+	 while($row = mysqli_fetch_array($result)){   
+	 	array_push($sessionToDelete, $row['sessionId']);
+	 	echo $row['sessionId'];
+	 }
+	}
+	else{
+		echo "no rows found";
+	}
+	echo $sessionToDelete[0];
+	// $row    =  mysqli_fetch_array($result);
+
+	//   	 	while($row = mysqli_fetch_assoc($result)) {
+	//    	 		echo ($row['sessionId']);   	
+ //   	 	}
+   	
 
 
-	$currentTimeStamp = $row['current_timestamp'];
-
-	echo $current_timestamp;
+	//echo time();
+	//print_r($row);
+	//$currentTimeStamp = $row['current_timestamp'];
+	//echo $currentTimeStamp;
 
 	// $query  = "SELECT * FROM `sessionInfo`";
 	// $result = mysqli_query($link, $query);

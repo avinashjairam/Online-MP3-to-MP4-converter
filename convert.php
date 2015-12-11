@@ -1,13 +1,3 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-
-<script>
-
-
-</script>
-
 
 <?php
  session_start(); 
@@ -21,6 +11,8 @@
  global $tempName;
  global $changeDirectory; 
 
+ $result="";
+$message="";
 
 $inactive = 10;
 
@@ -37,6 +29,11 @@ $_session['timeout'] = time();
 //echo $_session['timeout'];
 
  $sessionId = session_id();
+ $_session['id']= $sessionId;
+
+ echo $_session['id'];
+
+ //echo $sessionId;
  $changeDirectory = "cd $sessionId && ";
 
 // echo $sessionId;
@@ -45,8 +42,7 @@ $_session['timeout'] = time();
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
-
-
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
 //echo"<!DOCTYPE html>";
@@ -57,13 +53,20 @@ $directory = "../fileconverter/" . $sessionId;
 echo '<h3>hi</h3>';
 if(isset($_POST['submit'])){
 	$makeDirectory = "mkdir $sessionId";
-	$permission = 0777;
+	$permission = 0700;
 
-	exec($makeDirectory, $permission);
+	
+		//echo ;
 
-	$query = "INSERT INTO `sessionInfo` (`sessionId`) VALUES ('$sessionId')";
-	echo $query;
-	$result=mysqli_query($link, $query);
+		exec($makeDirectory, $permission);//$_SESSION['id']
+		$query = "INSERT INTO `sessionInfo` (`sessionId`) VALUES ('$sessionId')";
+		echo $query;
+		$result=mysqli_query($link, $query);
+
+		$_SESSION['id'] = $sessionId;
+
+			//echo ("{$_SESSION['id']}");
+	
 
 	echo $result;
 
