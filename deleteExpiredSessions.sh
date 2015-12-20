@@ -1,7 +1,7 @@
 #!/usr/bin/php
 
-<?php
 
+<?php
 
 	//Database connection link	
 	$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
@@ -44,4 +44,5 @@
 
 
 	//echo $sessionToDelete[0];
-?> 
+
+?>
