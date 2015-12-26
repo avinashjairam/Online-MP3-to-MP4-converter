@@ -1,7 +1,7 @@
 
 <?php
  session_start(); 
-
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
  global $sessionId;
@@ -33,7 +33,6 @@ $_SESSION['timeout'] = time();
 
 echo $_SESSION['id'];
 
-echo "HI";
  //echo $sessionId;
  $changeDirectory = "cd $sessionId && ";
 
@@ -47,14 +46,13 @@ error_reporting(E_ALL);
 
 $allowedTypes = array("mp3","avi","flv","wav"); 
 $directory = "../fileconverter/" . $sessionId;
-// echo '<h3>hi</h3>';
+echo '<h3>hi</h3>';
 
 
-if(isset($_POST['submit'])){
+if(isset($_FILES['fileUpload'])){
     $makeDirectory = "mkdir $sessionId";
     $permission = 0700;
 
-    echo "Submit Pressed";
     
         //echo ;
     if(!isset($_SESSION['id'])){
@@ -72,7 +70,7 @@ if(isset($_POST['submit'])){
     echo $result;
 
 //  echo $user->getLink();
-    // echo '<h3>hi</h3>';
+    echo '<h3>hi</h3>';
     $tempName = $_FILES['fileUpload']['tmp_name'];
     $theFile = $_FILES['fileUpload']['name'];
     
@@ -136,7 +134,7 @@ if(isset($_POST['submit'])){
 
 
 
-if(isset($_POST['Upload'])){
+if(isset($_FILES['image'])){
 //   exec('mkdir $sessionId',$output,$result);
     $image ="yes";
     $tempName = $_FILES['image']['tmp_name'];
@@ -297,6 +295,7 @@ function checkAllowedTypes($type){
 }
 ?>
 
+
 <!DOCTYPE html>
 <!-- release v4.2.8, copyright 2014 - 2015 Kartik Visweswaran -->
 <html lang="en">
@@ -360,9 +359,15 @@ function checkAllowedTypes($type){
     <div class="container contentContainer">
          <div id="fileUpload" >         
             <div class="row " >            
-                <form method="post" action="userInterface.php">
+                <!-- <form method="post" action="userInterface.php">
                    <label class="control-label">Select Audio File</label>
                   <input id="input-7" name="fileUpload" multiple type="file" class="file file-loading text-center" data-allowed-file-extensions='["mp3", "wav", "m4a"]'> 
+                </form> -->
+
+                <form action="userInterface.php" method="post" enctype="multipart/form-data">
+                    Select Track to upload:<br>
+                    <input type="file" name="fileUpload" class="file" id="fileToUpload"><br>
+              <!--       <input type="submit" value="Upload Track" name="submit"> -->
                 </form>
 
                 <br><br>
@@ -377,10 +382,10 @@ function checkAllowedTypes($type){
 
                 <br><br>
 
-               <div id="imageUpload" action="userInterface.php" style="visibility:hidden">
-                   <form method="post">
+               <div id="imageUpload" style="visibility:hidden">
+                   <form method="post" action="userInterface.php" enctype="multipart/form-data" >
                        <label class="control-label">Select Image</label>
-                       <input id="input-21" type="file" multiple type="file" name="image" class="  file-loading text-center" data-allowed-file-extensions='["png", "gif", "jpg", "jpeg"]' >
+                       <input  type="file" name="image" class="file" data-allowed-file-extensions='["png", "gif", "jpg", "jpeg"]' >
                     </form>
                 </div>
 
@@ -391,26 +396,18 @@ function checkAllowedTypes($type){
             <br><br>
             <div class = "row">
                 <div class="col-sm-offset-5 col-sm-2 text-center">
-                    <button type="button" class="btn btn-primary btn-lg id" id ="convert">Convert!</span></button> 
+                    <form method ="post" action="userInterface.php">
+                        <input type="submit" name = "convert" class="btn btn-primary btn-lg id" id ="convert" value="Convert!"/> 
+                    </form>
                 </div>
              </div>
         </div>
     </div>
 	<script>
-
-    $(window).load(function() {
+ $(window).load(function() {
         $('#loading').hide();
      });
 
-    $("#input-7").fileinput({
-        uploadUrl:'./userInterface.php',
-         uploadAsync:true;
-    });
-
-    $("#input-21").fileinput({
-        uploadUrl:'./userInterface.php',
-         uploadAsync:true;
-    });
 
 
     var myEl = document.getElementById('convert');
@@ -437,7 +434,9 @@ function checkAllowedTypes($type){
             removeIcon: "<i class=\"glyphicon glyphicon-trash\"></i> ",
             uploadClass: "btn btn-info",
             uploadLabel: "Upload",
+            uploadUrl: "./userInterface.php",
             uploadIcon: "<i class=\"glyphicon glyphicon-upload\"></i> "
+
         });
     });
 
@@ -471,22 +470,24 @@ function checkAllowedTypes($type){
         slugCallback: function(filename) {
             return filename.replace('(', '_').replace(']', '_');
         }
-	});
+    });
     /*
     $(".file").on('fileselect', function(event, n, l) {
         alert('File Selected. Name: ' + l + ', Num: ' + n);
     });
     */
-	$("#file-3").fileinput({
-		showUpload: false,
-		showCaption: false,
-		browseClass: "btn btn-primary btn-lg",
-		fileType: "any",
+    $("#file-3").fileinput({
+        showUpload: false,
+        showCaption: false,
+        browseClass: "btn btn-primary btn-lg",
+        fileType: "any",
         previewFileIcon: "<i class='glyphicon glyphicon-king'></i>"
-	});
-	$("#file-4").fileinput({
-		uploadExtraData: {kvId: '10'}
-	});
+    });
+
+    $("#file-4").fileinput({
+        uploadExtraData: {kvId: '10'}
+    });
+
     $(".btn-warning").on('click', function() {
         if ($('#file-4').attr('disabled')) {
             $('#file-4').fileinput('enable');
@@ -494,6 +495,7 @@ function checkAllowedTypes($type){
             $('#file-4').fileinput('disable');
         }
     });    
+    
     $(".btn-info").on('click', function() {
         $('#file-4').fileinput('refresh', {previewClass:'bg-info'});
     });
