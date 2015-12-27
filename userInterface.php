@@ -1,7 +1,12 @@
+<script>
+var downloadLink="";
+
+</script>
+
 
 <?php
  session_start(); 
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
 
 
  global $sessionId;
@@ -10,6 +15,9 @@ $link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
  global $fileWithoutExtension;
  global $tempName;
  global $changeDirectory; 
+ global $download;
+
+ $download=1;
 
 $result="";
 global $message;
@@ -221,14 +229,41 @@ if(isset($_POST['convert'])){
             echo "<br>Return is ". $return;
             echo 'Download';
         if($return==0)
+            $download=0;
+
         ?>
 
+         <script>
+            var download = <?php echo json_encode($download); ?>;
+
+            var downloadLink=<?php echo json_encode($sessionId."/".$fileWithoutExtension); ?>;
+
+            alert(downloadLink);
+
+
+          </script>
+ 
+
+      <div class="modal hide fade" id="myModal">
+          <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>Modal header</h3>
+          </div>
+          <div class="modal-body">
+             <a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"
+          </div>
+          <div class="modal-footer">
+            <a href="#" class="btn">Close</a>
+            <a href="#" class="btn btn-primary">Save changes</a>
+          </div>
+         </div>
+       
 
         
 
             
-        <a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"
- 
+       
+       
             <!-- This link opens in a new tab but the download link doesn't work -->
             <!-- <a href="#" onclick="window.open('http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4','_blank');window.close();return false" target="_blank" download>Download here</a>"; -->
     
@@ -346,68 +381,104 @@ function checkAllowedTypes($type){
    </div>
  
 
-
-   <div id="loading" class="row">
-    <div  class="col-sm-offset-5 col-sm-2 text-center">
-      <h3>Converting...</h3>
-      <img id="loading-image" src="./img/loading.gif" alt="Loading..." />
-    </div>
-   </div>
-
-
-       
-    <div class="container contentContainer">
-         <div id="fileUpload" >         
-            <div class="row " >            
-                <!-- <form method="post" action="userInterface.php">
-                   <label class="control-label">Select Audio File</label>
-                  <input id="input-7" name="fileUpload" multiple type="file" class="file file-loading text-center" data-allowed-file-extensions='["mp3", "wav", "m4a"]'> 
-                </form> -->
-
-                <form action="userInterface.php" method="post" enctype="multipart/form-data">
-                    Select Track to upload:<br>
-                    <input type="file" name="fileUpload" class="file" id="fileToUpload"><br>
-              <!--       <input type="submit" value="Upload Track" name="submit"> -->
-                </form>
-
-                <br><br>
-
-                <label>Would you like to add your own image to the mp4?</label>
-            
-                <form action="userInterface.php" method="post">
-                  <input id="no" type="radio" name="image" value="no" checked onchange="showImageUpload(this)"> No
-              
-                  <input id="yes" type="radio" name="image" value="yes" onchange="showImageUpload(this)"> Yes
-                </form>
-
-                <br><br>
-
-               <div id="imageUpload" style="visibility:hidden">
-                   <form method="post" action="userInterface.php" enctype="multipart/form-data" >
-                       <label class="control-label">Select Image</label>
-                       <input  type="file" name="image" class="file" data-allowed-file-extensions='["png", "gif", "jpg", "jpeg"]' >
-                    </form>
-                </div>
-
-                 <br>
-                 
-            </div>
-
-            <br><br>
-            <div class = "row">
-                <div class="col-sm-offset-5 col-sm-2 text-center">
-                    <form method ="post" action="userInterface.php">
-                        <input type="submit" name = "convert" class="btn btn-primary btn-lg id" id ="convert" value="Convert!"/> 
-                    </form>
-                </div>
-             </div>
+    <div id="mainContent">
+       <div id="loading" class="row">
+        <div  class="col-sm-offset-5 col-sm-2 text-center">
+          <h3>Converting...</h3>
+          <img id="loading-image" src="./img/loading.gif" alt="Loading..." />
         </div>
+       </div>
+
+       <div class="container contentContainer">
+            <div class= "row">
+                <div id = "download">
+                </div>
+            </div>
+       </div>
+
+
+           
+        <div class="container contentContainer">
+             <div id="fileUpload" >         
+                <div class="row " >            
+                    <!-- <form method="post" action="userInterface.php">
+                       <label class="control-label">Select Audio File</label>
+                      <input id="input-7" name="fileUpload" multiple type="file" class="file file-loading text-center" data-allowed-file-extensions='["mp3", "wav", "m4a"]'> 
+                    </form> -->
+
+                    <form action="userInterface.php" method="post" enctype="multipart/form-data">
+                        Select Track to upload:<br>
+                        <input type="file" name="fileUpload" class="file" id="fileToUpload"><br>
+                  <!--       <input type="submit" value="Upload Track" name="submit"> -->
+                    </form>
+
+                    <br><br>
+
+                    <label>Would you like to add your own image to the mp4?</label>
+                
+                    <form action="userInterface.php" method="post">
+                      <input id="no" type="radio" name="image" value="no" checked onchange="showImageUpload(this)"> No
+                  
+                      <input id="yes" type="radio" name="image" value="yes" onchange="showImageUpload(this)"> Yes
+                    </form>
+
+                    <br><br>
+
+                   <div id="imageUpload" style="visibility:hidden">
+                       <form method="post" action="userInterface.php" enctype="multipart/form-data" >
+                           <label class="control-label">Select Image</label>
+                           <input  type="file" name="image" class="file" data-allowed-file-extensions='["png", "gif", "jpg", "jpeg"]' >
+                        </form>
+                    </div>
+
+                     <br>
+                     
+                </div>
+
+                <br><br>
+                <div class = "row">
+                    <div class="col-sm-offset-5 col-sm-2 text-center">
+                        <form method ="post" action="userInterface.php">
+                            <input type="submit" name = "convert" class="btn btn-primary btn-lg id" id ="convert" value="Convert!"/> 
+                        </form>
+                    </div>
+                 </div>
+            </div>
+        </div>
+
     </div>
+
+    <button onclick="hideMainContent();">click</button>
 	<script>
+
+    
  $(window).load(function() {
         $('#loading').hide();
+
+    //     if(download==0){
+    //         hideMainContent();
+
+        // }
      });
 
+     var downloadContent=' <div class="modal hide fade" id="myModal">\
+          <div class="modal-header">\
+            <a class="close" data-dismiss="modal">×</a>\
+            <h3>Modal header</h3>\
+          </div>\
+          <div class="modal-body">\
+             <a href=" http://45.79.163.144/fileconverter/"' + downloadLink + ' ".mp4" target="_blank" download>Download here</a>\
+          </div\
+          <div class="modal-footer">\
+            <a href="#" class="btn">Close</a>\
+            <a href="#" class="btn btn-primary">Save changes</a>\
+          </div>\
+         </div>';
+
+    // if(download==0){
+    //     hideMainContent();
+
+    // }
 
 
     var myEl = document.getElementById('convert');
@@ -420,6 +491,10 @@ function checkAllowedTypes($type){
 
     function showImageUpload(e){
         document.getElementById('imageUpload').style.visibility=e.checked && e.id =='yes' ? 'visible' : 'hidden';           
+    }
+
+    function hideMainContent(){
+        document.getElementById('mainContent').style.visibility='hidden';
     }
         
 
