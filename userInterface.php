@@ -7,7 +7,7 @@ var download=1;
 
 <?php
  session_start(); 
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
 
 
  global $sessionId;
@@ -390,16 +390,25 @@ function checkAllowedTypes($type){
         </div>
        </div> -->
 
-       <div class="container contentContainer">
+     <!--   <div class="container contentContainer">
             <div class= "row">
                 <div id = "download">
                 </div>
             </div>
-       </div>
-
-
+       </div> -->
            
-        <div class="container contentContainer">
+        <div class="container contentContainer">            
+                <div class = "row">
+                    <div id="download">
+                       <!--  <div align="center" class="embed-responsive embed-responsive-16by9">
+                            <video autoplay loop class="embed-responsive-item">
+                                <source src="" type=video/mp4>
+                            </video> 
+                        </div> -->
+                    </div>
+                </div>
+        </div>
+
              <div id="fileUpload" >         
                 <div class="row " >            
                     <!-- <form method="post" action="userInterface.php">
@@ -452,15 +461,30 @@ function checkAllowedTypes($type){
     <button onclick="hideMainContent();">click</button>
     <script>
 
+ var downloadContent = '<div align="center" class="embed-responsive embed-responsive-16by9">\
+                            <video autoplay loop class="embed-responsive-item">\
+                                 <source src='+downloadLink+'.mp4' +'type=video/mp4>\
+                            </video> \
+                            </div> ';
+
     
  $(window).load(function() {
         // $('#loading').hide();
 
         if(download==0){
-            hideMainContent();
-
+            // hideMainContent();
+            hideFileUploadContent();
+            document.getElementById('download').innerHtml= downloadContent;
         }
      });
+
+
+
+
+                            
+                               
+                        
+                    
 
      // var downloadContent=' <div class="modal hide fade" id="myModal">\
      //      <div class="modal-header">\
@@ -494,10 +518,12 @@ function checkAllowedTypes($type){
         document.getElementById('imageUpload').style.visibility=e.checked && e.id =='yes' ? 'visible' : 'hidden';           
     }
 
-    function hideMainContent(){
-        document.getElementById('mainContent').style.visibility='hidden';
+    function hideFileUploadContent(){
+        document.getElementById('fileUpload').style.visibility='hidden';
     }
-        
+    // function hideMainContent(){
+    //     document.getElementById('mainContent').style.visibility='hidden';
+    // } 
 
     $(document).on('ready', function() {
         $("#input-21").fileinput({
