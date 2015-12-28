@@ -1,12 +1,13 @@
 <script>
 var downloadLink="";
+var download=1;
 
 </script>
 
 
 <?php
  session_start(); 
-
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
  global $sessionId;
@@ -234,17 +235,17 @@ if(isset($_POST['convert'])){
         ?>
 
          <script>
-            var download = <?php echo json_encode($download); ?>;
+             download = <?php echo json_encode($download); ?>;
 
-            var downloadLink=<?php echo json_encode($sessionId."/".$fileWithoutExtension); ?>;
+             downloadLink=<?php echo json_encode($sessionId."/".$fileWithoutExtension); ?>;
 
-            alert(downloadLink);
+            // alert(downloadLink);
 
 
           </script>
  
 
-      <div class="modal hide fade" id="myModal">
+  <!--     <div class="modal hide fade" id="myModal">
           <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
             <h3>Modal header</h3>
@@ -256,7 +257,7 @@ if(isset($_POST['convert'])){
             <a href="#" class="btn">Close</a>
             <a href="#" class="btn btn-primary">Save changes</a>
           </div>
-         </div>
+         </div> -->
        
 
         
@@ -382,12 +383,12 @@ function checkAllowedTypes($type){
  
 
     <div id="mainContent">
-       <div id="loading" class="row">
+      <!--  <div id="loading" class="row">
         <div  class="col-sm-offset-5 col-sm-2 text-center">
           <h3>Converting...</h3>
           <img id="loading-image" src="./img/loading.gif" alt="Loading..." />
         </div>
-       </div>
+       </div> -->
 
        <div class="container contentContainer">
             <div class= "row">
@@ -449,45 +450,45 @@ function checkAllowedTypes($type){
     </div>
 
     <button onclick="hideMainContent();">click</button>
-	<script>
+    <script>
 
     
  $(window).load(function() {
-        $('#loading').hide();
+        // $('#loading').hide();
 
-    //     if(download==0){
-    //         hideMainContent();
+        if(download==0){
+            hideMainContent();
 
-        // }
+        }
      });
 
-     var downloadContent=' <div class="modal hide fade" id="myModal">\
-          <div class="modal-header">\
-            <a class="close" data-dismiss="modal">×</a>\
-            <h3>Modal header</h3>\
-          </div>\
-          <div class="modal-body">\
-             <a href=" http://45.79.163.144/fileconverter/"' + downloadLink + ' ".mp4" target="_blank" download>Download here</a>\
-          </div\
-          <div class="modal-footer">\
-            <a href="#" class="btn">Close</a>\
-            <a href="#" class="btn btn-primary">Save changes</a>\
-          </div>\
-         </div>';
+     // var downloadContent=' <div class="modal hide fade" id="myModal">\
+     //      <div class="modal-header">\
+     //        <a class="close" data-dismiss="modal">×</a>\
+     //        <h3>Modal header</h3>\
+     //      </div>\
+     //      <div class="modal-body">\
+     //         <a href=" http://45.79.163.144/fileconverter/"' + downloadLink + ' ".mp4" target="_blank" download>Download here</a>\
+     //      </div\
+     //      <div class="modal-footer">\
+     //        <a href="#" class="btn">Close</a>\
+     //        <a href="#" class="btn btn-primary">Save changes</a>\
+     //      </div>\
+     //     </div>';
 
     // if(download==0){
-    //     hideMainContent();
+    //     document.getElementById('fileUpload').innerHtml ="";
 
     // }
 
 
     var myEl = document.getElementById('convert');
 
-    myEl.addEventListener('click', function() {
-        jQuery('#fileUpload div').html('');
-           $('#loading').show();
-        //alert('Hello world');
-    }, false);
+    // myEl.addEventListener('click', function() {
+    //     jQuery('#fileUpload div').html('');
+    //        // $('#loading').show();
+    //     //alert('Hello world');
+    // }, false);
 
     function showImageUpload(e){
         document.getElementById('imageUpload').style.visibility=e.checked && e.id =='yes' ? 'visible' : 'hidden';           
@@ -594,7 +595,7 @@ function checkAllowedTypes($type){
         });
         */
     });
-	</script>
+    </script>
 
     </body>
 </html>
