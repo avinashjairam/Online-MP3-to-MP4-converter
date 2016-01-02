@@ -399,16 +399,15 @@ function checkAllowedTypes($type){
            
         <div class="container contentContainer">            
                 <div class = "row">
-                    <div id="download">
-                       <!--  <div align="center" class="embed-responsive embed-responsive-16by9">
-                            <video autoplay loop class="embed-responsive-item">
-                                <source src="" type=video/mp4>
-                            </video> 
-                        </div> -->
+                    <div id="download">                     
+                        <video id="myVideo" controls autoplay>
+                          <source id="mp4_src" src="" type="video/mp4">
+                          <source id="ogg_src" src="" type="video/ogg">
+                          Your browser does not support HTML5 video.
+                        </video>
                     </div>
                 </div>
-        </div>
-
+       
              <div id="fileUpload" >         
                 <div class="row " >            
                     <!-- <form method="post" action="userInterface.php">
@@ -461,6 +460,8 @@ function checkAllowedTypes($type){
     <button onclick="hideMainContent();">click</button>
     <script>
 
+
+
  var downloadContent = '<div align="center" class="embed-responsive embed-responsive-16by9">\
                             <video autoplay loop class="embed-responsive-item">\
                                  <source src='+downloadLink+'.mp4' +'type=video/mp4>\
@@ -470,12 +471,35 @@ function checkAllowedTypes($type){
     
  $(window).load(function() {
         // $('#loading').hide();
-
+        document.getElementById('myVideo').style.display='none';
+       
         if(download==0){
             // hideMainContent();
+             var vid = document.getElementById("myVideo");
+             var extension = ".mp4";
             hideFileUploadContent();
-            document.getElementById('download').innerHtml= downloadContent;
+            var link=  downloadLink.concat(extension);
+            vid.src=link;
+            //document.write(downloadLink);
+           // alert(downloadLink);
+            // //document.getElementById('download').innerHtml= downloadContent;
+            // document.querySelector("#myVideo > source").src = downloadLink;
+
+            // var video = document.getElementById('video');
+            // var source = document.createElement('source');
+
+            // source.setAttribute('src', downloadLink);
+
+            // video.appendChild(source);
+          //  video.load();
+
+
+
+            document.getElementById('myVideo').style.display='block';
         }
+
+
+
      });
 
 
