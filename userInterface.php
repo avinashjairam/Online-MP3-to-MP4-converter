@@ -8,7 +8,7 @@ var download=1;
 <?php
  session_start(); 
 
-
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
  global $sessionId;
  global $theFile;
@@ -280,29 +280,16 @@ if(isset($_POST['convert'])){
         exec($imageConversion, $output,$return);
         echo " Return is ". $return;
         if($return==0)          
+            $download=0;
             ?>
         <!-- <a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"; -->
         <script>
-            $('#myModal').modal('show');
-        </script> 
+        //     $('#myModal').modal('show');
+            download = <?php echo json_encode($download); ?>;
+            downloadLink=<?php echo json_encode($sessionId."/".$fileWithoutExtension); ?>;
+         </script> 
 
-        <div id="myModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Download your mp4!</h4>
-                  </div>
-                  <div class="modal-body">
-                    <a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>";
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-            </div>
-        </div>
+     
             
         <?php
         $query = "DELETE FROM `withImage` WHERE `id` = ". $currentId ;
