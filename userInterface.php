@@ -9,7 +9,6 @@ var download=1;
  session_start(); 
 
 
-
  global $sessionId;
  global $theFile;
  global $trackFileType;
@@ -17,8 +16,12 @@ var download=1;
  global $tempName;
  global $changeDirectory; 
  global $download;
+ global $imageUploaded;
+ global $trackUploaded;
 
  $download=1;
+ $imageUploaded=1;
+ $trackUploaded=1;
 
 $result="";
 global $message;
@@ -40,7 +43,7 @@ $_SESSION['timeout'] = time();
  $sessionId = session_id();
  $_SESSION['id'] ;
 
-echo $_SESSION['id'];
+//echo $_SESSION['id'];
 
  //echo $sessionId;
  $changeDirectory = "cd $sessionId && ";
@@ -55,7 +58,7 @@ error_reporting(E_ALL);
 
 $allowedTypes = array("mp3","avi","flv","wav"); 
 $directory = "../fileconverter/" . $sessionId;
-echo '<h3>hi</h3>';
+//echo '<h3>hi</h3>';
 
 
 if(isset($_FILES['fileUpload'])){
@@ -67,7 +70,7 @@ if(isset($_FILES['fileUpload'])){
     if(!isset($_SESSION['id'])){
         exec($makeDirectory, $permission);//$_SESSION['id']
         $query = "INSERT INTO `sessionInfo` (`sessionId`) VALUES ('$sessionId')";
-        echo $query;
+        //echo $query;
         $result=mysqli_query($link, $query);
 
         $_SESSION['id'] = $sessionId;
@@ -76,21 +79,21 @@ if(isset($_FILES['fileUpload'])){
             //echo ("{$_SESSION['id']}");
     
 
-    echo $result;
+    //echo $result;
 
 //  echo $user->getLink();
-    echo '<h3>hi</h3>';
+   // echo '<h3>hi</h3>';
     $tempName = $_FILES['fileUpload']['tmp_name'];
     $theFile = $_FILES['fileUpload']['name'];
     
-    echo "The name of the file is ".$theFile."'<br>'";
+   // echo "The name of the file is ".$theFile."'<br>'";
     $fileWithoutExtension=substr($theFile,0,-4);
     $type = $_FILES['fileUpload']['type']; 
 //  echo "type is ". $type."<br>";
     // $target_file = $_SERVER['DOCUMENT_ROOT']. $directory . basename($theFile);
     $target_file = $directory ."/". basename($_FILES["fileUpload"]["name"]);
     $trackFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-    echo "trackfiletype ". $trackFileType."<br>";
+    //echo "trackfiletype ". $trackFileType."<br>";
     // $check = getimagesize($tempName);
     // if($check == false) {
  //        $message = "File is not an image";
@@ -110,7 +113,7 @@ if(isset($_FILES['fileUpload'])){
     // }
     // print_r(in_array($trackFileType, $allowedTypes)) ;
     // print_r($allowedTypes);
-    echo gettype($trackFileType);
+    //echo gettype($trackFileType);
     if(!in_array($trackFileType, $allowedTypes)){
         $message .= "<br>Sorry, only audio files are allowed.";
     }
@@ -129,16 +132,32 @@ if(isset($_FILES['fileUpload'])){
             
             $query = "INSERT INTO `filesToConvert` (`fileName`) VALUES ('". $theFile  ."')";        
             $result=mysqli_query($link, $query);
+
+            $trackUploaded =0;
         }
+      
+
+      
+       
+
+
+
         else{
             $error = $_FILES['fileUpload']['error'];
             $message = getFileUploadError($error);
         }
         
     }
-    echo $message; 
+   // echo $message; 
 }
+?>
 
+         <script>
+            trackUploaded= <?php echo json_encode($trackUploaded); ?>;
+
+        </script>
+
+<?php
 
 
 
@@ -179,6 +198,8 @@ if(isset($_FILES['image'])){
             $result=mysqli_query($link, $query);
             $query =  "INSERT INTO `withImage` (`ifImage`) VALUES (TRUE)";  
             $result=mysqli_query($link, $query);
+
+            $imageUploaded=0;
         }
         else{
             $error = $_FILES['image']['error'];
@@ -187,10 +208,20 @@ if(isset($_FILES['image'])){
     }
     echo $message; 
 }
+
+
+
+?>
+     <script>
+            imageUploaded= <?php echo json_encode($imageUploaded); ?>;
+
+        </script>
+
+<?php
     
 if(isset($_POST['convert'])){
-    echo "Convert Pressed";
-    echo "The name of the file is ".$theFile."<br>";
+   // echo "Convert Pressed";
+   // echo "The name of the file is ".$theFile."<br>";
     $query = "SELECT * FROM `filesToConvert` WHERE `id` = (SELECT MAX(ID) FROM `filesToConvert`)";  
     $result=mysqli_query($link, $query);
     $row = mysqli_fetch_array($result);
@@ -213,7 +244,7 @@ if(isset($_POST['convert'])){
     
     if($num_rows == 0){
         $go = 0;
-        echo "go is ". $go;
+       // echo "go is ". $go;
     }
     else{
         $go = 1; 
@@ -224,11 +255,11 @@ if(isset($_POST['convert'])){
         //     echo "exec is enabled";
         // }
         $defaultConversion = "$changeDirectory ffmpeg -loop 1 -i ../image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 -pix_fmt yuv420p \"" . $fileWithoutExtension."\".mp4";
-        echo "no " .$defaultConversion;
+    //    echo "no " .$defaultConversion;
         //exec("cd fileconverter && " .$defaultConversion);
         exec($defaultConversion, $output,$return);
-            echo "<br>Return is ". $return;
-            echo 'Download';
+    //        echo "<br>Return is ". $return;
+      //      echo 'Download';
         if($return==0)
             $download=0;
 
@@ -275,10 +306,10 @@ if(isset($_POST['convert'])){
     }
     else{
         $imageConversion = "$changeDirectory ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 -pix_fmt yuv420p \"" . $fileWithoutExtension."\".mp4";
-        echo "yes ". $imageConversion;
+      //  echo "yes ". $imageConversion;
         //exec("cd fileconverter && " .$defaultConversion);
         exec($imageConversion, $output,$return);
-        echo " Return is ". $return;
+   //     echo " Return is ". $return;
         if($return==0)          
             $download=0;
             ?>
@@ -360,7 +391,7 @@ function checkAllowedTypes($type){
         </div>
         <div class="collapse navbar-collapse pushDown nav-pills">
           <ul class="nav navbar-nav">
-             <li class="active"><a href="#home">Home</a></li>
+             <li class="active"><a href="http://45.79.163.144/fileconverter/userInterface.php">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
@@ -411,7 +442,7 @@ function checkAllowedTypes($type){
                     </form> -->
 
                     <form action="userInterface.php" method="post" enctype="multipart/form-data">
-                        Select Track to upload:<br>
+                        <label>Select Track to upload:</label><br>
                         <input type="file" name="fileUpload" class="file" id="fileToUpload"><br>
                   <!--       <input type="submit" value="Upload Track" name="submit"> -->
                     </form>
@@ -506,7 +537,7 @@ function checkAllowedTypes($type){
 
 
                             
-                               
+    alert("track uploaded =" + trackUploaded + " image Uploaded " + imageUploaded);
                         
                     
 
