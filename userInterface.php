@@ -387,11 +387,18 @@ function checkAllowedTypes($type){
         <div class="container contentContainer">            
                 <div class = "row">
                     <div id="download">                     
+                        <a href="" id ="downloadButton" class="btn btn-lg btn-success" download>Download My Converted MP4</a>
+                          <br><br>
                         <video id="myVideo" controls autoplay>
                           <source id="mp4_src" src="" type="video/mp4">
                           <source id="ogg_src" src="" type="video/ogg">
                           Your browser does not support HTML5 video.
                         </video>
+
+                      
+                        <!-- <a href="#" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-arrow-down"></span> Download My Converted MP4 </a> -->
+                        <!-- <a href="" id ="downloadButton" class="btn btn-lg btn-success" download><span class="glyphicon glyphicon-arrow-down"></span> Download My Converted MP4 </a> -->
+
                     </div>
                 </div>
        
@@ -459,14 +466,17 @@ function checkAllowedTypes($type){
  $(window).load(function() {
         // $('#loading').hide();
         document.getElementById('myVideo').style.display='none';
-       
+        document.getElementById('downloadButton').style.display='none';
+
         if(download==0){
             // hideMainContent();
              var vid = document.getElementById("myVideo");
+             var downloadButton = document.getElementById("downloadButton");
              var extension = ".mp4";
             hideFileUploadContent();
             var link=  downloadLink.concat(extension);
             vid.src=link;
+            downloadButton.href=link;
             //document.write(downloadLink);
            // alert(downloadLink);
             // //document.getElementById('download').innerHtml= downloadContent;
@@ -483,6 +493,8 @@ function checkAllowedTypes($type){
 
 
             document.getElementById('myVideo').style.display='block';
+            document.getElementById('downloadButton').style.display='block';
+
         }
 
 
