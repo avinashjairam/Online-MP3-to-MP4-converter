@@ -8,7 +8,7 @@ var download=1;
 <?php
  session_start(); 
 
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
 
  global $sessionId;
  global $theFile;
@@ -387,7 +387,8 @@ function checkAllowedTypes($type){
         <div class="container contentContainer">            
                 <div class = "row">
                     <div id="download">                     
-                        <a href="" id ="downloadButton" class="btn btn-lg btn-success" download>Download My Converted MP4</a>
+                      <!--   <a href="" id ="downloadButton" class="btn btn-lg btn-success" download>Download My Converted MP4</a> -->
+                      <a href="" id ="downloadButton" class="btn btn-lg btn-success" download><span class="glyphicon glyphicon-download-alt"></span> Download My Converted MP4</a>
                           <br><br>
                         <video id="myVideo" controls autoplay>
                           <source id="mp4_src" src="" type="video/mp4">
