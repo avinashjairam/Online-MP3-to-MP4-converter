@@ -481,7 +481,8 @@ function checkAllowedTypes($type){
                 <div class = "row">
                     <div class="col-sm-offset-5 col-sm-2 text-center">
                         <form method ="post" action="userInterface.php">
-                            <input type="submit" name = "convert" class="btn btn-primary btn-lg id" id ="convert" value="Convert!"/> 
+                           <!--  <a href="#" class=""><span class=""></span> Convert!</a> -->
+                            <input type="submit" name = "convert" class="btn btn-block btn-lg btn-primary glyphicon glyphicon-wrench" id ="convert" value="Convert!"/> 
                         </form>
                     </div>
                  </div>
@@ -551,10 +552,18 @@ function checkAllowedTypes($type){
 
     function hideUploadTrack(){
         document.getElementById("uploadTrack").style.display="none";
+        var elem = document.createElement("img");
+        elem.setAttribute("src", "./img/successful-track-upload.jpg");     
+        elem.setAttribute("alt", "Track uploaded successfully");
+        document.getElementById("uploadTrack").appendChild("elem");
     }
 
     function hideUploadImage(){
         document.getElementById("imageOption").style.display="none";
+         var elem = document.createElement("img");
+        elem.setAttribute("src", "./img/successful-image-upload");     
+        elem.setAttribute("alt", "Image uploaded successfully");
+        document.getElementById("imageOption").appendChild("elem");
     }
 
 
