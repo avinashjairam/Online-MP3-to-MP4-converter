@@ -1,6 +1,8 @@
 <script>
 var downloadLink="";
 var download=1;
+var imageUploaded=1;
+var trackUploaded=1; 
 
 </script>
 
@@ -77,7 +79,7 @@ if(isset($_FILES['fileUpload'])){
     }
 
             //echo ("{$_SESSION['id']}");
-    
+    $trackUploaded=0;
 
     //echo $result;
 
@@ -133,7 +135,7 @@ if(isset($_FILES['fileUpload'])){
             $query = "INSERT INTO `filesToConvert` (`fileName`) VALUES ('". $theFile  ."')";        
             $result=mysqli_query($link, $query);
 
-            $trackUploaded =0;
+            
         }
       
 
@@ -440,24 +442,29 @@ function checkAllowedTypes($type){
                        <label class="control-label">Select Audio File</label>
                       <input id="input-7" name="fileUpload" multiple type="file" class="file file-loading text-center" data-allowed-file-extensions='["mp3", "wav", "m4a"]'> 
                     </form> -->
-
-                    <form action="userInterface.php" method="post" enctype="multipart/form-data">
-                        <label>Select Track to upload:</label><br>
-                        <input type="file" name="fileUpload" class="file" id="fileToUpload"><br>
-                  <!--       <input type="submit" value="Upload Track" name="submit"> -->
-                    </form>
+                    <div id="uploadTrack">
+                        <form action="userInterface.php" method="post" enctype="multipart/form-data">
+                            <label>Select Track to upload:</label><br>
+                            <input type="file" name="fileUpload" class="file" id="fileToUpload"><br>
+                      <!--       <input type="submit" value="Upload Track" name="submit"> -->
+                        </form>
+                    </div>
 
                     <br><br>
 
-                    <label>Would you like to add your own image to the mp4?</label>
+                    <div id="imageOption">
+
+                        <label>Would you like to add your own image to the mp4?</label>
                 
-                    <form action="userInterface.php" method="post">
-                      <input id="no" type="radio" name="image" value="no" checked onchange="showImageUpload(this)"> No
-                  
-                      <input id="yes" type="radio" name="image" value="yes" onchange="showImageUpload(this)"> Yes
-                    </form>
+                        <form action="userInterface.php" method="post">
+                          <input id="no" type="radio" name="image" value="no" checked onchange="showImageUpload(this)"> No
+                      
+                          <input id="yes" type="radio" name="image" value="yes" onchange="showImageUpload(this)"> Yes
+                        </form>
 
-                    <br><br>
+                        <br><br>
+
+                    </div>
 
                    <div id="imageUpload" style="visibility:hidden">
                        <form method="post" action="userInterface.php" enctype="multipart/form-data" >
@@ -529,15 +536,32 @@ function checkAllowedTypes($type){
 
         }
 
+        if(trackUploaded==0){
+            hideUploadTrack();
+        }
+
+        if(imageUploaded==0){
+            hideUploadTrack();
+            hideUploadImage();
+        }
+
 
 
      });
+
+    function hideUploadTrack(){
+        document.getElementById("uploadTrack").style.display="none";
+    }
+
+    function hideUploadImage(){
+        document.getElementById("imageOption").style.display="none";
+    }
 
 
 
 
                             
-    alert("track uploaded =" + trackUploaded + " image Uploaded " + imageUploaded);
+     alert("track uploaded =" + trackUploaded + " image Uploaded " + imageUploaded);
                         
                     
 
