@@ -9,7 +9,7 @@ var trackUploaded=1;
 
 <?php
  session_start(); 
-
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
  global $sessionId;
  global $theFile;
@@ -552,18 +552,22 @@ function checkAllowedTypes($type){
 
     function hideUploadTrack(){
         document.getElementById("uploadTrack").style.display="none";
-        var elem = document.createElement("img");
-        elem.setAttribute("src", "./img/successful-track-upload.jpg");     
-        elem.setAttribute("alt", "Track uploaded successfully");
-        document.getElementById("uploadTrack").appendChild("elem");
+        var elem1 = document.createElement("img");
+        elem1.setAttribute("src", "./img/successful-track-upload.JPG");     
+        elem1.setAttribute("alt", "Track uploaded successfully");
+        document.getElementById("uploadTrack").innerHtml="";
+        document.getElementById("uploadTrack").appendChild(elem1);
+     document.getElementById("uploadTrack").style.display="block";
     }
 
     function hideUploadImage(){
         document.getElementById("imageOption").style.display="none";
-         var elem = document.createElement("img");
-        elem.setAttribute("src", "./img/successful-image-upload");     
-        elem.setAttribute("alt", "Image uploaded successfully");
-        document.getElementById("imageOption").appendChild("elem");
+         var elem2 = document.createElement("img");
+        elem2.setAttribute("src", "./img/successful-image-upload.JPG");     
+        elem2.setAttribute("alt", "Image uploaded successfully");
+        document.getElementById("imageOption").innerHtml="";
+        document.getElementById("imageOption").appendChild(elem2);
+        document.getElementById("imageOption").style.display="block";
     }
 
 
