@@ -450,6 +450,11 @@ function checkAllowedTypes($type){
                         </form>
                     </div>
 
+                    <div id="trackUploadSuccess">
+                        <img src="./img/successful-track-upload.JPG" alt="trackUploadSuccess"/>
+
+                    </div>
+
                     <br><br>
 
                     <div id="imageOption">
@@ -463,6 +468,11 @@ function checkAllowedTypes($type){
                         </form>
 
                         <br><br>
+
+                    </div>
+
+                    <div id="imageUploadSuccess">
+                        <img src="./img/successful-image-upload.JPG" alt="ImageUploadSuccess"/>
 
                     </div>
 
@@ -507,6 +517,18 @@ function checkAllowedTypes($type){
         // $('#loading').hide();
         document.getElementById('myVideo').style.display='none';
         document.getElementById('downloadButton').style.display='none';
+        document.getElementById('trackUploadSuccess').style.display='none';
+        document.getElementById('imageUploadSuccess').style.display='none';
+
+
+         if(trackUploaded==0){
+            hideUploadTrack();
+        }
+
+        if(imageUploaded==0){
+            hideUploadTrack();
+            hideUploadImage();
+        }
 
         if(download==0){
             // hideMainContent();
@@ -537,37 +559,35 @@ function checkAllowedTypes($type){
 
         }
 
-        if(trackUploaded==0){
-            hideUploadTrack();
-        }
-
-        if(imageUploaded==0){
-            hideUploadTrack();
-            hideUploadImage();
-        }
+       
 
 
 
      });
 
     function hideUploadTrack(){
-        document.getElementById("uploadTrack").style.display="none";
-        var elem1 = document.createElement("img");
-        elem1.setAttribute("src", "./img/successful-track-upload.JPG");     
-        elem1.setAttribute("alt", "Track uploaded successfully");
-        document.getElementById("uploadTrack").innerHtml="";
-        document.getElementById("uploadTrack").appendChild(elem1);
-     document.getElementById("uploadTrack").style.display="block";
+        // document.getElementById("trackUploadSuccess").style.display="none";
+     //    var elem1 = document.createElement("img");
+     //    elem1.setAttribute("src", "./img/successful-track-upload.JPG");     
+     //    elem1.setAttribute("alt", "Track uploaded successfully");
+     //    document.getElementById("uploadTrack").innerHtml='';
+     // document.getElementById("uploadTrack").appendChild(elem1);
+     document.getElementById("uploadTrack").style.display="none";
+     document.getElementById("trackUploadSuccess").style.display="block";
     }
 
     function hideUploadImage(){
+        // document.getElementById("imageOption").style.display="none";
+        //  var elem2 = document.createElement("img");
+        // elem2.setAttribute("src", "./img/successful-image-upload.JPG");     
+        // elem2.setAttribute("alt", "Image uploaded successfully");
+        // document.getElementById("imageOption").innerHtml='';
+        // document.getElementById("imageOption").appendChild(elem2);
+        // document.getElementById("imageOption").style.display="block";
+        document.getElementById("uploadTrack").style.display="none";
         document.getElementById("imageOption").style.display="none";
-         var elem2 = document.createElement("img");
-        elem2.setAttribute("src", "./img/successful-image-upload.JPG");     
-        elem2.setAttribute("alt", "Image uploaded successfully");
-        document.getElementById("imageOption").innerHtml="";
-        document.getElementById("imageOption").appendChild(elem2);
-        document.getElementById("imageOption").style.display="block";
+        document.getElementById("trackUploadSuccess").style.display="block"; 
+        document.getElementById("imageUploadSuccess").style.display="block";
     }
 
 
