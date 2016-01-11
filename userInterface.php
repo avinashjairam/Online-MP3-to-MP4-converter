@@ -9,7 +9,7 @@ var trackUploaded=1;
 
 <?php
  session_start(); 
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
 
  global $sessionId;
  global $theFile;
@@ -476,7 +476,7 @@ function checkAllowedTypes($type){
 
                     </div>
 
-                   <div id="imageUpload" style="visibility:hidden">
+                   <div id="imageUpload" style="display:none">
                        <form method="post" action="userInterface.php" enctype="multipart/form-data" >
                            <label class="control-label">Select Image</label>
                            <input  type="file" name="image" class="file" data-allowed-file-extensions='["png", "gif", "jpg", "jpeg"]' >
@@ -519,10 +519,12 @@ function checkAllowedTypes($type){
         document.getElementById('downloadButton').style.display='none';
         document.getElementById('trackUploadSuccess').style.display='none';
         document.getElementById('imageUploadSuccess').style.display='none';
+        document.getElementById('imageOption').style.display='none';
 
 
          if(trackUploaded==0){
             hideUploadTrack();
+            document.getElementById('imageOption').style.display='block';
         }
 
         if(imageUploaded==0){
@@ -627,7 +629,7 @@ function checkAllowedTypes($type){
     // }, false);
 
     function showImageUpload(e){
-        document.getElementById('imageUpload').style.visibility=e.checked && e.id =='yes' ? 'visible' : 'hidden';           
+        document.getElementById('imageUpload').style.display=e.checked && e.id =='yes' ? 'block' : 'none';           
     }
 
     function hideFileUploadContent(){
