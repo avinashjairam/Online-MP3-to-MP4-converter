@@ -3,13 +3,17 @@ var downloadLink="";
 var download=1;
 var imageUploaded=1;
 var trackUploaded=1; 
+var convertPressed=1;
+
+localStorage.setItem("trackUploaded", trackUploaded);
+
 
 </script>
 
 
 <?php
  session_start(); 
-
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
  global $sessionId;
  global $theFile;
@@ -24,7 +28,7 @@ var trackUploaded=1;
  $download=1;
  $imageUploaded=1;
  $trackUploaded=1;
-
+$convertPressed=1;
 $result="";
 global $message;
 
@@ -135,6 +139,16 @@ if(isset($_FILES['fileUpload'])){
             $query = "INSERT INTO `filesToConvert` (`fileName`) VALUES ('". $theFile  ."')";        
             $result=mysqli_query($link, $query);
 
+         ?>   
+         <script>
+            trackUploaded= <?php echo json_encode($trackUploaded); ?>;
+            localStorage.setItem("trackUploaded", trackUploaded);
+            window.location.href = "http://45.79.163.144/fileconverter/userInterface.php?TU=" + localStorage.getItem("trackUploaded"); 
+
+            alert (localStorage.getItem("trackUploaded"));
+
+        </script>
+<?php
             
         }
       
@@ -152,14 +166,10 @@ if(isset($_FILES['fileUpload'])){
     }
    // echo $message; 
 }
-?>
 
-         <script>
-            trackUploaded= <?php echo json_encode($trackUploaded); ?>;
 
-        </script>
 
-<?php
+
 
 
 
@@ -208,7 +218,7 @@ if(isset($_FILES['image'])){
             $message =getFileUploadError($error);
         }
     }
-    echo $message; 
+  //  echo $message; 
 }
 
 
@@ -222,7 +232,28 @@ if(isset($_FILES['image'])){
 <?php
     
 if(isset($_POST['convert'])){
-   // echo "Convert Pressed";
+
+?>
+
+ <script>
+          //  imageUploaded= <?php echo json_encode($imageUploaded); ?>;
+    
+    localStorage.setItem("trackUploaded", trackUploaded);
+
+
+ </script>
+
+
+
+
+
+<?php
+    if(isset($_GET['TU']) == 1 ){
+        echo "<script> noTrackUploaded(); </script>";
+        exit();
+    } 
+    echo "Convert Pressed";
+    $convertPressed =0;
    // echo "The name of the file is ".$theFile."<br>";
     $query = "SELECT * FROM `filesToConvert` WHERE `id` = (SELECT MAX(ID) FROM `filesToConvert`)";  
     $result=mysqli_query($link, $query);
@@ -272,6 +303,8 @@ if(isset($_POST['convert'])){
 
              downloadLink=<?php echo json_encode($sessionId."/".$fileWithoutExtension); ?>;
 
+             convertPressed = <?php echo json_encode($convertPressed); ?>;
+             localStorage.setItem("trackUploaded", 1);
             // alert(downloadLink);
 
 
@@ -326,7 +359,7 @@ if(isset($_POST['convert'])){
             
         <?php
         $query = "DELETE FROM `withImage` WHERE `id` = ". $currentId ;
-        echo "<br>".$query;
+      //  echo "<br>".$query;
         mysqli_query($link, $query);
         //$imageRow = mysqli_fetch_array($imageResult);
     }
@@ -487,6 +520,10 @@ function checkAllowedTypes($type){
                      
                 </div>
 
+                 <div id ="warning" class="alert alert-danger">
+                    <strong>Warning!</strong> Please Upload a Track First! 
+                 </div>
+
                 <br><br>
                 <div class = "row">
                     <div class="col-sm-offset-5 col-sm-2 text-center">
@@ -501,7 +538,7 @@ function checkAllowedTypes($type){
 
     </div>
 
-    <button onclick="hideMainContent();">click</button>
+    <!-- <button onclick="hideMainContent();">click</button> -->
     <script>
 
 
@@ -520,7 +557,20 @@ function checkAllowedTypes($type){
         document.getElementById('trackUploadSuccess').style.display='none';
         document.getElementById('imageUploadSuccess').style.display='none';
         document.getElementById('imageOption').style.display='none';
+        document.getElementById('warning').style.display='none';
 
+        var TU = localStorage.getItem("trackUploaded");
+
+        alert(TU);
+
+        // if(TU==1){
+        //     alert('Please upload a track first!');
+
+        // }
+
+        // if(trackUploaded==1 && imageUploaded == 1 && convertPressed == 0){
+        //     alert('Please upload a track first!');
+        // }
 
          if(trackUploaded==0){
             hideUploadTrack();
