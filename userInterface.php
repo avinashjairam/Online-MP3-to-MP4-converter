@@ -622,7 +622,8 @@ function checkAllowedTypes($type){
           
     if(localStorage.getItem("trackUploaded") == 1){
 
-        alert("track can't upload " + localStorage.getItem("trackUploaded") );
+       // alert("track can't upload " + localStorage.getItem("trackUploaded") );
+       document.getElementById('warning').style.display='block';
         return false;
      }
     }
