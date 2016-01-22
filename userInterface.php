@@ -5,7 +5,7 @@ var imageUploaded=1;
 var trackUploaded=1; 
 var convertPressed=1;
 
-localStorage.setItem("trackUploaded", trackUploaded);
+//localStorage.setItem("trackUploaded", trackUploaded);
 
 
 </script>
@@ -13,7 +13,8 @@ localStorage.setItem("trackUploaded", trackUploaded);
 
 <?php
  session_start(); 
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
+
 
  global $sessionId;
  global $theFile;
@@ -143,13 +144,13 @@ if(isset($_FILES['fileUpload'])){
          <script>
             trackUploaded= <?php echo json_encode($trackUploaded); ?>;
             localStorage.setItem("trackUploaded", trackUploaded);
-            window.location.href = "http://45.79.163.144/fileconverter/userInterface.php?TU=" + localStorage.getItem("trackUploaded"); 
+           // window.location.href = "http://45.79.163.144/fileconverter/userInterface.php?TU=" + localStorage.getItem("trackUploaded"); 
 
             alert (localStorage.getItem("trackUploaded"));
 
         </script>
 <?php
-            
+          
         }
       
 
@@ -476,7 +477,7 @@ function checkAllowedTypes($type){
                       <input id="input-7" name="fileUpload" multiple type="file" class="file file-loading text-center" data-allowed-file-extensions='["mp3", "wav", "m4a"]'> 
                     </form> -->
                     <div id="uploadTrack">
-                        <form action="userInterface.php" method="post" enctype="multipart/form-data">
+                        <form action="userInterface.php" method="post" enctype="multipart/form-data" >
                             <label>Select Track to upload:</label><br>
                             <input type="file" name="fileUpload" class="file" id="fileToUpload"><br>
                       <!--       <input type="submit" value="Upload Track" name="submit"> -->
@@ -527,9 +528,9 @@ function checkAllowedTypes($type){
                 <br><br>
                 <div class = "row">
                     <div class="col-sm-offset-5 col-sm-2 text-center">
-                        <form method ="post" action="userInterface.php">
+                        <form method ="post" action="userInterface.php" onsubmit="return checkTrackUpload()">
                            <!--  <a href="#" class=""><span class=""></span> Convert!</a> -->
-                            <input type="submit" name = "convert" class="btn btn-block btn-lg btn-primary glyphicon glyphicon-wrench" id ="convert" value="Convert!"/> 
+                            <input type="submit" name = "convert" class="btn btn-block btn-lg btn-primary glyphicon glyphicon-wrench" id ="convert" value="Convert!" /> 
                         </form>
                     </div>
                  </div>
@@ -617,6 +618,15 @@ function checkAllowedTypes($type){
 
      });
 
+    function checkTrackUpload(){
+          
+    if(localStorage.getItem("trackUploaded") == 1){
+
+        alert("track can't upload " + localStorage.getItem("trackUploaded") );
+        return false;
+     }
+    }
+
     function hideUploadTrack(){
         // document.getElementById("trackUploadSuccess").style.display="none";
      //    var elem1 = document.createElement("img");
@@ -646,7 +656,7 @@ function checkAllowedTypes($type){
 
 
                             
-     alert("track uploaded =" + trackUploaded + " image Uploaded " + imageUploaded);
+   //  alert("track uploaded =" + trackUploaded + " image Uploaded " + imageUploaded);
                         
                     
 
