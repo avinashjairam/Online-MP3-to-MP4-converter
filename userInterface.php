@@ -428,8 +428,8 @@ function checkAllowedTypes($type){
         <div class="collapse navbar-collapse pushDown nav-pills">
           <ul class="nav navbar-nav">
              <li class="active"><a href="http://45.79.163.144/fileconverter/userInterface.php">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="./about.php">About</a></li>
+            <li><a href="./contact.php">Contact</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -620,7 +620,7 @@ function checkAllowedTypes($type){
 
     function checkTrackUpload(){
           
-    if(localStorage.getItem("trackUploaded") == 1){
+    if(localStorage.getItem("trackUploaded") == 1 || localStorage.getItem("trackUploaded") === null ) {
 
        // alert("track can't upload " + localStorage.getItem("trackUploaded") );
        document.getElementById('warning').style.display='block';
@@ -657,37 +657,11 @@ function checkAllowedTypes($type){
 
 
                             
-   //  alert("track uploaded =" + trackUploaded + " image Uploaded " + imageUploaded);
-                        
-                    
-
-     // var downloadContent=' <div class="modal hide fade" id="myModal">\
-     //      <div class="modal-header">\
-     //        <a class="close" data-dismiss="modal">×</a>\
-     //        <h3>Modal header</h3>\
-     //      </div>\
-     //      <div class="modal-body">\
-     //         <a href=" http://45.79.163.144/fileconverter/"' + downloadLink + ' ".mp4" target="_blank" download>Download here</a>\
-     //      </div\
-     //      <div class="modal-footer">\
-     //        <a href="#" class="btn">Close</a>\
-     //        <a href="#" class="btn btn-primary">Save changes</a>\
-     //      </div>\
-     //     </div>';
-
-    // if(download==0){
-    //     document.getElementById('fileUpload').innerHtml ="";
-
-    // }
 
 
     var myEl = document.getElementById('convert');
 
-    // myEl.addEventListener('click', function() {
-    //     jQuery('#fileUpload div').html('');
-    //        // $('#loading').show();
-    //     //alert('Hello world');
-    // }, false);
+   
 
     function showImageUpload(e){
         document.getElementById('imageUpload').style.display=e.checked && e.id =='yes' ? 'block' : 'none';           
@@ -696,9 +670,7 @@ function checkAllowedTypes($type){
     function hideFileUploadContent(){
         document.getElementById('fileUpload').style.visibility='hidden';
     }
-    // function hideMainContent(){
-    //     document.getElementById('mainContent').style.visibility='hidden';
-    // } 
+   
 
     $(document).on('ready', function() {
         $("#input-21").fileinput({
