@@ -25,6 +25,8 @@ var convertPressed=1;
  global $download;
  global $imageUploaded;
  global $trackUploaded;
+ global $ipAddress;   //IP Address 
+ //global $HTTP_X_FORWARDED_FOR;
 
  $download=1;
  $imageUploaded=1;
@@ -61,6 +63,10 @@ $_SESSION['timeout'] = time();
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
+
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
+
 
 
 $allowedTypes = array("mp3","avi","flv","wav"); 
@@ -132,6 +138,9 @@ if(isset($_FILES['fileUpload'])){
         $index = 1; 
         if(move_uploaded_file($tempName, $directory ."/".$theFile)){
             //$theFile = str_replace($trackFileType, "mp4", $theFile); 
+
+            $ipAddress= $_SERVER['REMOTE_ADDR'];
+
             $path = $directory ."/".$theFile;
             $path2 = $directory ."/". $theFile;
             //echo $path2;
@@ -139,6 +148,10 @@ if(isset($_FILES['fileUpload'])){
             
             $query = "INSERT INTO `filesToConvert` (`fileName`) VALUES ('". $theFile  ."')";        
             $result=mysqli_query($link, $query);
+
+            $query = "INSERT INTO `fileUploaders` (`ipAddress`, `fileName`) VALUES ('$ipAddress', '$theFile')";
+            $result = mysqli_query($link, $query);
+            echo $result;
 
          ?>   
          <script>
@@ -479,7 +492,7 @@ function checkAllowedTypes($type){
                     <div id="uploadTrack">
                         <form action="userInterface.php" method="post" enctype="multipart/form-data" >
                             <label>Select Track to upload:</label><br>
-                            <input type="file" name="fileUpload" class="file" id="fileToUpload"><br>
+                            <input type="file" name="fileUpload" class="file" id="fileToUpload" data-allowed-file-extensions='["mp3"]'><br>
                       <!--       <input type="submit" value="Upload Track" name="submit"> -->
                         </form>
                     </div>
