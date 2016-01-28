@@ -64,7 +64,7 @@ ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
 
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
 
 
 
@@ -149,7 +149,7 @@ if(isset($_FILES['fileUpload'])){
             $query = "INSERT INTO `filesToConvert` (`fileName`) VALUES ('". $theFile  ."')";        
             $result=mysqli_query($link, $query);
 
-            $query = "INSERT INTO `fileUploaders` (`ipAddress`, `fileName`) VALUES ('$ipAddress', '$theFile')";
+            $query = "INSERT INTO `fileUploaders` (`ipAddress`, `trackName`) VALUES ('$ipAddress', '$theFile')";
             $result = mysqli_query($link, $query);
             echo $result;
 
