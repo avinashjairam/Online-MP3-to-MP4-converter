@@ -35,6 +35,8 @@ $convertPressed=1;
 $result="";
 global $message;
 
+ $ipAddress= $_SERVER['REMOTE_ADDR'];
+
 $inactive = 10;
 
 $sessionLife = time() - $_SESSION['timeout'];
@@ -64,7 +66,7 @@ ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
 
-
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
 
@@ -151,7 +153,7 @@ if(isset($_FILES['fileUpload'])){
 
             $query = "INSERT INTO `fileUploaders` (`ipAddress`, `trackName`) VALUES ('$ipAddress', '$theFile')";
             $result = mysqli_query($link, $query);
-            echo $result;
+            //echo $result;
 
          ?>   
          <script>
@@ -226,6 +228,10 @@ if(isset($_FILES['image'])){
             $result=mysqli_query($link, $query);
 
             $imageUploaded=0;
+
+
+            $query = "INSERT INTO `fileUploaders` (`ipAddress`, `imageName`) VALUES ('$ipAddress', '$theFile')";
+            $result = mysqli_query($link, $query);
         }
         else{
             $error = $_FILES['image']['error'];
