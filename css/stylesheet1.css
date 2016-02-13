@@ -1,11 +1,49 @@
-#centerConvert{
-	text-align: center;
+
+
+
+
+html {
+  position: relative;
+  min-height: 100%;
 }
 
 body{
-	padding-top: 120px;
-	font-family: helvetica;
+  padding-top: 120px;
+  font-family: helvetica;
+   margin-bottom: 60px;
 }
+
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #337ab7;
+}
+
+.footerStyle {
+  width: auto;
+  max-width: 680px;
+  padding: 25px 15px;
+  padding-left: 60px;
+
+}
+
+.footerStyle a {
+  color:white;
+}
+
+
+
+
+#centerConvert{
+  text-align: center;
+}
+
+
+
 
 .buttonFont{
 	font-family: helvetica;
@@ -13,6 +51,7 @@ body{
 
 .navbar {
 /*    background-color: #222222;*/
+     background-color: #337ab7;
     border-color: #E7E7E7;
     height:100px;
 }
@@ -23,6 +62,20 @@ body{
 	font-weight: bold;
 	font-family: helvetica;
 	font-size:20px;
+  color: white;
+}
+
+/*.navbar .nav > li > a {
+     
+}*/
+
+.navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+     color: #720b87;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+     background: #ffffff none repeat scroll 0% 0%;
+     color: #000000;
 }
 
 .pushDown{

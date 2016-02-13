@@ -71,7 +71,6 @@ ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
 
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
 
@@ -599,11 +598,23 @@ function checkAllowedTypes($type){
                     </div>
                  </div>
             </div>
+
+        </div>
+
+        <div>
+            <footer class="footer">
+              <div class="footerStyle">
+                <a href="./termsAndConditions.html">Terms and Conditions</a>
+              </div>
+            </footer>
         </div>
 
     </div>
 
     <!-- <button onclick="hideMainContent();">click</button> -->
+     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
     <script>
 
 
