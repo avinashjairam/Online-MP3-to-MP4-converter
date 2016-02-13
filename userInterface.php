@@ -4,6 +4,8 @@ var download=1;
 var imageUploaded=1;
 var trackUploaded=1; 
 var convertPressed=1;
+var duplicateValue=1; 
+var overSizedTrack=1;
 
 //localStorage.setItem("trackUploaded", trackUploaded);
 
@@ -13,8 +15,6 @@ var convertPressed=1;
 
 <?php
  session_start(); 
-
-
 
  global $sessionId;
  global $theFile;
@@ -26,14 +26,19 @@ var convertPressed=1;
  global $imageUploaded;
  global $trackUploaded;
  global $ipAddress;   //IP Address 
+ global $duplicateValue;
+ global $overSizedTrack;
  //global $HTTP_X_FORWARDED_FOR;
 
  $download=1;
  $imageUploaded=1;
  $trackUploaded=1;
-$convertPressed=1;
-$result="";
-global $message;
+ $convertPressed=1;
+ $duplicateValue=1;
+ $overSizedTrack=1;
+ $result="";
+ 
+ global $message;
 
  $ipAddress= $_SERVER['REMOTE_ADDR'];
 
@@ -77,8 +82,13 @@ $directory = "../fileconverter/" . $sessionId;
 
 
 if(isset($_FILES['fileUpload'])){
-    $makeDirectory = "mkdir $sessionId";
-    $permission = 0700;
+    if(!is_dir($sessionId) && isset($_SESSION['id'])){
+        echo "creating directory";
+        $makeDirectory = "mkdir $sessionId";        
+        $permission = 0700;
+        exec($makeDirectory, $permission);//$_SESSION['id']
+
+    }
 
     
         //echo ;
@@ -113,13 +123,40 @@ if(isset($_FILES['fileUpload'])){
     // if($check == false) {
  //        $message = "File is not an image";
  //    } 
-        // Check if file already exists
+
+    // Check if file already exists
+
     if (file_exists($target_file)) {
-        $message .= "<br>Sorry, file already exists or you didn't upload a file.";    
+        $message .= "<br>Sorry, file already exists or you didn't upload a file."; 
+        $duplicateValue =0;   
+
+     ?>   
+         <script>
+            duplicateValue = <?php echo json_encode($duplicateValue); ?>;
+            localStorage.setItem("duplicateValue", duplicateValue);
+           // window.location.href = "http://45.79.163.144/fileconverter/userInterface.php?TU=" + localStorage.getItem("trackUploaded"); 
+            alert (localStorage.getItem("duplicateValue"));
+        </script>
+<?php
+
+
+
     }
+
+
     // Check file size
     if ($_FILES['fileUpload']['size'] > 1000000) {
-        $message .="<br>Sorry, your file is too large.";       
+        $message .="<br>Sorry, your file is too large.";      
+        $overSizedTrack=0; 
+
+   ?>   
+     <script>
+        overSizedTrack = <?php echo json_encode($overSizedTrack); ?>;
+        localStorage.setItem("overSizedTrack", overSizedTrack);
+       // window.location.href = "http://45.79.163.144/fileconverter/userInterface.php?TU=" + localStorage.getItem("trackUploaded"); 
+        alert (localStorage.getItem("overSizedTrack"));
+    </script>
+<?php
     }
     // Allow certain file formats
     // if($trackFileType != "mp4"  or $trackFileType != "mp3" || $trackFileType != "avi" || $trackFileType != "flv" || $trackFileType != "wmv") {
@@ -205,9 +242,9 @@ if(isset($_FILES['image'])){
         $message = "File is not an image";
     } 
         // Check if file already exists
-    if (file_exists($target_file)) {
-        $message .= "<br>Sorry, file already exists.";    
-    }
+    // if (file_exists($target_file)) {
+    //     $message .= "<br>Sorry, file already exists.";    
+    // }
     // Check file size
     if ($_FILES['image']['size'] > 500000) {
         $message .="<br>Sorry, your file is too large.";       
@@ -544,6 +581,14 @@ function checkAllowedTypes($type){
                     <strong>Warning!</strong> Please Upload a Track First! 
                  </div>
 
+                  <div id ="warningDuplicate" class="alert alert-danger">
+                    <strong>Warning!</strong> You uploaded that file already. Please upload a different file! 
+                 </div>
+
+                 <div id ="warningLargeFile" class="alert alert-danger">
+                    <strong>Warning!</strong> The file you uploaded exceeds our limit of 1GB. Please upload a smaller file! 
+                 </div>
+
                 <br><br>
                 <div class = "row">
                     <div class="col-sm-offset-5 col-sm-2 text-center">
@@ -578,6 +623,9 @@ function checkAllowedTypes($type){
         document.getElementById('imageUploadSuccess').style.display='none';
         document.getElementById('imageOption').style.display='none';
         document.getElementById('warning').style.display='none';
+        document.getElementById('warningDuplicate').style.display='none';
+        document.getElementById('warningLargeFile').style.display='none';
+
 
         var TU = localStorage.getItem("trackUploaded");
 
@@ -601,6 +649,16 @@ function checkAllowedTypes($type){
             hideUploadTrack();
             hideUploadImage();
         }
+
+        if(duplicateValue==0){
+            document.getElementById("warningDuplicate").style.display='block';
+        }
+
+        if(overSizedTrack==0){
+            document.getElementById("overSizedTrack").style.display='block';
+        }
+
+        //if(larg)
 
         if(download==0){
             // hideMainContent();
@@ -628,6 +686,7 @@ function checkAllowedTypes($type){
 
             document.getElementById('myVideo').style.display='block';
             document.getElementById('downloadButton').style.display='block';
+
 
         }
 
