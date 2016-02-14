@@ -70,9 +70,11 @@ $_SESSION['timeout'] = time();
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
+$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
 
 
-
+ $makeDirectory = "mkdir $sessionId";        
+$permission = 0700;
 
 
 $allowedTypes = array("mp3","avi","flv","wav"); 
@@ -83,8 +85,8 @@ $directory = "../fileconverter/" . $sessionId;
 if(isset($_FILES['fileUpload'])){
     if(!is_dir($sessionId) && isset($_SESSION['id'])){
         echo "creating directory";
-        $makeDirectory = "mkdir $sessionId";        
-        $permission = 0700;
+        //$makeDirectory = "mkdir $sessionId";        
+        //$permission = 0700;
         exec($makeDirectory, $permission);//$_SESSION['id']
 
     }
@@ -98,6 +100,8 @@ if(isset($_FILES['fileUpload'])){
         $result=mysqli_query($link, $query);
 
         $_SESSION['id'] = $sessionId;
+
+        exec($makeDirectory, $permission);
     }
 
             //echo ("{$_SESSION['id']}");
@@ -538,11 +542,16 @@ function checkAllowedTypes($type){
                       <!--       <input type="submit" value="Upload Track" name="submit"> -->
                         </form>
                     </div>
-
-                    <div id="trackUploadSuccess">
-                        <img src="./img/successful-track-upload.JPG" alt="trackUploadSuccess"/>
+                </div>
+                <div class="row">
+                    <!-- <div class="col-md-2 col-md-offset-1" id="trackUploadSuccess"> -->
+                     <div class="col-sm-12" id="trackUploadSuccess">
+                       <!--  <img src="./img/successful-track-upload.JPG" alt="trackUploadSuccess"/> -->
+                         <a href="" id ="" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-download-alt"></span> Track Uploaded Successfully</a>
+                         <br>
 
                     </div>
+                </div>
 
                     <br><br>
 
@@ -559,11 +568,14 @@ function checkAllowedTypes($type){
                         <br><br>
 
                     </div>
-
-                    <div id="imageUploadSuccess">
-                        <img src="./img/successful-image-upload.JPG" alt="ImageUploadSuccess"/>
-
+                <div class="row">
+                   <!--  <div class="col-md-2 col-md-offset-5" id="imageUploadSuccess"> -->
+                    <div class="" id="imageUploadSuccess">
+                        <!-- <img src="./img/successful-image-upload.JPG" alt="ImageUploadSuccess"/> -->
+                        <a href="" id ="" class="btn btn-lg btn-success" download><span class="glyphicon glyphicon-download-alt"></span> Image Uploaded Successfully</a>
+                        <br>
                     </div>
+                </div>
 
                    <div id="imageUpload" style="display:none">
                        <form method="post" action="userInterface.php" enctype="multipart/form-data" >
@@ -589,14 +601,14 @@ function checkAllowedTypes($type){
                  </div>
 
                 <br><br>
-                <div class = "row">
+                
                     <div class="col-sm-offset-5 col-sm-2 text-center">
                         <form method ="post" action="userInterface.php" onsubmit="return checkTrackUpload()">
                            <!--  <a href="#" class=""><span class=""></span> Convert!</a> -->
                             <input type="submit" name = "convert" class="btn btn-block btn-lg btn-primary glyphicon glyphicon-wrench" id ="convert" value="Convert!" /> 
                         </form>
                     </div>
-                 </div>
+                 
             </div>
 
         </div>
