@@ -70,7 +70,7 @@ $_SESSION['timeout'] = time();
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
-$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+
 
 
  $makeDirectory = "mkdir $sessionId";        
@@ -514,7 +514,7 @@ function checkAllowedTypes($type){
                 <div class = "row">
                     <div id="download">                     
                       <!--   <a href="" id ="downloadButton" class="btn btn-lg btn-success" download>Download My Converted MP4</a> -->
-                      <a href="" id ="downloadButton" class="btn btn-lg btn-success" download><span class="glyphicon glyphicon-download-alt"></span> Download My Converted MP4</a>
+                      <a href="" id ="downloadButton" class="btn btn-lg btn-success" download><span class="glyphicon glyphicon-download-alt"></span> Click Here to Download Your Converted MP4</a>
                           <br><br>
                         <video id="myVideo" controls autoplay>
                           <source id="mp4_src" src="" type="video/mp4">
@@ -547,7 +547,8 @@ function checkAllowedTypes($type){
                     <!-- <div class="col-md-2 col-md-offset-1" id="trackUploadSuccess"> -->
                      <div class="col-sm-12" id="trackUploadSuccess">
                        <!--  <img src="./img/successful-track-upload.JPG" alt="trackUploadSuccess"/> -->
-                         <a href="" id ="" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-download-alt"></span> Track Uploaded Successfully</a>
+                        <!--  <a href="" id ="" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-download-alt"></span> Track Uploaded Successfully</a> -->
+                        <a href="#" class="btn btn-block btn-success"><span class="glyphicon glyphicon-ok"></span>  File Uploaded Successfully</a>
                          <br>
 
                     </div>
@@ -572,7 +573,8 @@ function checkAllowedTypes($type){
                    <!--  <div class="col-md-2 col-md-offset-5" id="imageUploadSuccess"> -->
                     <div class="" id="imageUploadSuccess">
                         <!-- <img src="./img/successful-image-upload.JPG" alt="ImageUploadSuccess"/> -->
-                        <a href="" id ="" class="btn btn-lg btn-success" download><span class="glyphicon glyphicon-download-alt"></span> Image Uploaded Successfully</a>
+                        <!-- <a href="" id ="" class="btn btn-lg btn-success" download><span class="glyphicon glyphicon-download-alt"></span> Image Uploaded Successfully</a> -->
+                        <a href="#" class="btn btn-block btn-success"><span class="glyphicon glyphicon-ok"></span> Image Uploaded Successfully </a>
                         <br>
                     </div>
                 </div>
