@@ -72,7 +72,6 @@ error_reporting(E_ALL);
 //Insert Database connection
 
 
-
  $makeDirectory = "mkdir $sessionId";        
 $permission = 0700;
 
@@ -286,6 +285,7 @@ if(isset($_FILES['image'])){
 ?>
      <script>
             imageUploaded= <?php echo json_encode($imageUploaded); ?>;
+            localStorage.setItem("imageUploaded", imageUploaded);
 
         </script>
 
@@ -554,7 +554,7 @@ function checkAllowedTypes($type){
                     </div>
                 </div>
 
-                    <br><br>
+                    
 
                     <div id="imageOption">
 
@@ -594,6 +594,10 @@ function checkAllowedTypes($type){
                     <strong>Warning!</strong> Please Upload a Track First! 
                  </div>
 
+                  <div id ="warningImage" class="alert alert-danger">
+                    <strong>Warning!</strong> Please Upload an Image! If you don't wish to add an image, please check 'no.' Be aware that if you select this option a default image will be added to the video background.
+                 </div>
+
                   <div id ="warningDuplicate" class="alert alert-danger">
                     <strong>Warning!</strong> You uploaded that file already. Please upload a different file! 
                  </div>
@@ -605,7 +609,7 @@ function checkAllowedTypes($type){
                 <br><br>
                 
                     <div class="col-sm-offset-5 col-sm-2 text-center">
-                        <form method ="post" action="userInterface.php" onsubmit="return checkTrackUpload()">
+                        <form method ="post" action="userInterface.php" onsubmit="return checkUpload()">
                            <!--  <a href="#" class=""><span class=""></span> Convert!</a> -->
                             <input type="submit" name = "convert" class="btn btn-block btn-lg btn-primary glyphicon glyphicon-wrench" id ="convert" value="Convert!" /> 
                         </form>
@@ -650,11 +654,15 @@ function checkAllowedTypes($type){
         document.getElementById('warning').style.display='none';
         document.getElementById('warningDuplicate').style.display='none';
         document.getElementById('warningLargeFile').style.display='none';
+        document.getElementById('warningImage').style.display='none';
 
-
+        //TU means 'track uploaded'
         var TU = localStorage.getItem("trackUploaded");
 
-        alert(TU);
+        //IU means 'image uploaded'
+     //   var IU = localStorage.getItem("imageUploaded");
+
+        //alert(TU);
 
         // if(TU==1){
         //     alert('Please upload a track first!');
@@ -721,6 +729,21 @@ function checkAllowedTypes($type){
 
      });
 
+    function checkUpload(){
+        var track=checkTrackUpload();
+        var image=checkImageUpload();
+
+        alert("image = " + image + " track " + track); 
+
+        if ((track && image===false)){
+            return true;
+        }
+        else{
+            return false; 
+        }
+    }
+
+
     function checkTrackUpload(){
           
     if(localStorage.getItem("trackUploaded") == 1 || localStorage.getItem("trackUploaded") === null ) {
@@ -729,6 +752,34 @@ function checkAllowedTypes($type){
        document.getElementById('warning').style.display='block';
         return false;
      }
+     else{
+        return true;
+     }
+    }
+
+    function checkImageUpload(){
+        if(document.getElementById('imageUpload').style.display='block' && (localStorage.getItem("imageUploaded" )== 1 || localStorage.getItem("imageUploaded") == null) ){
+          //alert(localStorage.getItem("imageUploaded"));
+          alert(document.getElementById('imageUpload').style.display);
+           showImageWarning();
+            return false;
+        }
+        else{
+            alert("hi");
+            hideImageWarning();
+            return true;
+        }
+
+
+
+    }
+
+    function showImageWarning(){
+        document.getElementById('warningImage').style.display='block';
+    }
+
+    function hideImageWarning(){
+        document.getElementById('warningImage').style.display='none';
     }
 
     function hideUploadTrack(){
@@ -767,7 +818,18 @@ function checkAllowedTypes($type){
    
 
     function showImageUpload(e){
-        document.getElementById('imageUpload').style.display=e.checked && e.id =='yes' ? 'block' : 'none';           
+        document.getElementById('imageUpload').style.display=e.checked && e.id =='yes' ? 'block' : 'none';  
+
+        //IU = localStorage.setItem(document.getElementById('imageUpload').style.display);
+       // alert(document.getElementById('imageUpload').style.display);
+
+       IU=document.getElementById('imageUpload').style.display;
+
+       if(IU=='none'){
+        hideImageWarning();
+       }
+
+       alert("ImageUpload is " + IU);         
     }
 
     function hideFileUploadContent(){

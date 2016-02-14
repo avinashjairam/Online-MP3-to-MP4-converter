@@ -12,6 +12,10 @@ body {
      width: 1300px;
 }
 
+#download{
+     text-align: center;
+}
+
 .navbar {  border: none!important; }
 
 .footer {
