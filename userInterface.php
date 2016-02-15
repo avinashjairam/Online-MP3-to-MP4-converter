@@ -72,6 +72,7 @@ error_reporting(E_ALL);
 //Insert Database connection
 
 
+
  $makeDirectory = "mkdir $sessionId";        
 $permission = 0700;
 
@@ -731,16 +732,29 @@ function checkAllowedTypes($type){
 
     function checkUpload(){
         var track=checkTrackUpload();
-        var image=checkImageUpload();
+       var image;
+        //alert(track);
+       alert("image = " + image + " track " + track); 
 
-        alert("image = " + image + " track " + track); 
+       if(track===true && IU == 'block'){
+         image=checkImageUpload();
+         return false;
+       }
 
-        if ((track && image===false)){
-            return true;
-        }
-        else{
-            return false; 
-        }
+       if(track==true && IU == 'none'){
+         return true;
+       }
+
+       //if (typeof image == 'undefined')
+
+        return false;
+
+        // if (track){
+        //     return true;
+        // }
+        // else{
+        //     return false; 
+        // }
     }
 
 
@@ -829,7 +843,7 @@ function checkAllowedTypes($type){
         hideImageWarning();
        }
 
-       alert("ImageUpload is " + IU);         
+       alert("ImageUpload (IU) is " + IU);         
     }
 
     function hideFileUploadContent(){
