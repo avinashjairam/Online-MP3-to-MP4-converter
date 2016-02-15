@@ -496,7 +496,7 @@ function checkAllowedTypes($type){
    </div>
  
 
-    <div id="mainContent">
+    <div id="">
       <!--  <div id="loading" class="row">
         <div  class="col-sm-offset-5 col-sm-2 text-center">
           <h3>Converting...</h3>
