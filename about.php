@@ -37,7 +37,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a  class="navbar-brand" href="#"><img src="./img/logo.JPG"</a>
+          <a  class="navbar-brand" href="#"><img src="./img/logo.JPG"/></a>
         </div>
         <div class="collapse navbar-collapse pushDown nav-pills">
           <ul class="nav navbar-nav">
@@ -53,7 +53,9 @@
     <div id="mainContent">  
         <div class="container contentContainer">
             <div class = "row">  
-             <div class="col-md-12 ">                             
+              <!-- <div class=class="col-md-3">
+              </div> -->
+             <div class="col-md-6 col-md-offset-3">                             
                     <h1>About</h1>
                     <p>Convert your audio files to MP4 for free! Also, add your own custom image as the background of your newly converted video. </p>  
 
@@ -62,7 +64,9 @@
                     <h3>Coming Soon!</h3>
 
                     <p>Share your videos and merge and create a chain of videos with other users. Please check back later for more details!</p>          
-                </div>     
+                </div>   
+               <!--  <div class=class="col-md-3">
+              </div> -->  
             </div>
          </div>
     </div>
