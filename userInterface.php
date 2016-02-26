@@ -513,9 +513,10 @@ function checkAllowedTypes($type){
            
         <div class="container contentContainer">            
                 <div class = "row">
-                    <div id="download">                     
+                                       
                       <!--   <a href="" id ="downloadButton" class="btn btn-lg btn-success" download>Download My Converted MP4</a> -->
                       <a href="" id ="downloadButton" class="btn btn-lg btn-success" download><span class="glyphicon glyphicon-download-alt"></span> Click Here to Download Your Converted MP4</a>
+                       <div class="col-md-6 col-md-offset-3" id="download">  
                           <br><br>
                         <video id="myVideo" controls autoplay>
                           <source id="mp4_src" src="" type="video/mp4">
