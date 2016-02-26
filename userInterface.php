@@ -538,6 +538,7 @@ function checkAllowedTypes($type){
                       <input id="input-7" name="fileUpload" multiple type="file" class="file file-loading text-center" data-allowed-file-extensions='["mp3", "wav", "m4a"]'> 
                     </form> -->
                     <div id="uploadTrack">
+                        <br><br><br>
                         <form action="userInterface.php" method="post" enctype="multipart/form-data" >
                             <label>Select Track to upload:</label><br>
                             <input type="file" name="fileUpload" class="file" id="fileToUpload" data-allowed-file-extensions='["mp3"]'><br>
