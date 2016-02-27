@@ -471,7 +471,7 @@ function checkAllowedTypes($type){
 
 
     </head>
-    <body>
+<body>
 
 
 
