@@ -74,6 +74,13 @@
     
 
     <!-- <button onclick="hideMainContent();">click</button> -->
+     <div>
+        <footer class="footer">
+          <div class="footerStyle">
+            <a href="./termsAndConditions.html">Terms and Conditions</a>
+          </div>
+        </footer>
+    </div>
     
 
     </body>

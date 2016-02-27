@@ -156,7 +156,14 @@ if (!$errName && !$errEmail && !$errMessage && !$errHuman) {
          </div>
     </div>
 
-    
+  <div>
+        <footer class="footer">
+          <div class="footerStyle">
+            <a href="./termsAndConditions.html">Terms and Conditions</a>
+          </div>
+        </footer>
+    </div>
+
 
     <!-- <button onclick="hideMainContent();">click</button> -->
     
