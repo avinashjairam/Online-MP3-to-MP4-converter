@@ -540,7 +540,7 @@ function checkAllowedTypes($type){
                     <div id="uploadTrack">
                         <br><br><br>
                         <form action="userInterface.php" method="post" enctype="multipart/form-data" >
-                            <label>Select Track to upload:</label><br>
+                            <label class="white">Select Track to upload:</label><br>
                             <input type="file" name="fileUpload" class="file" id="fileToUpload" data-allowed-file-extensions='["mp3"]'><br>
                       <!--       <input type="submit" value="Upload Track" name="submit"> -->
                         </form>
@@ -561,7 +561,7 @@ function checkAllowedTypes($type){
 
                     <div id="imageOption">
 
-                        <label>Would you like to add your own image to the mp4?</label>
+                        <label class="white">Would you like to add your own image to the mp4?</label>
                 
                         <form action="userInterface.php" method="post">
                           <input id="no" type="radio" name="image" value="no" checked onchange="showImageUpload(this)"> No
@@ -584,7 +584,7 @@ function checkAllowedTypes($type){
 
                    <div id="imageUpload" style="display:none">
                        <form method="post" action="userInterface.php" enctype="multipart/form-data" >
-                           <label class="control-label">Select Image</label>
+                           <label class="control-label white">Select Image</label>
                            <input  type="file" name="image" class="file" data-allowed-file-extensions='["png", "gif", "jpg", "jpeg"]' >
                         </form>
                     </div>
