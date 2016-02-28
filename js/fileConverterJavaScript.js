@@ -1,36 +1,36 @@
 
-
-
-
- // var downloadContent = '<div align="center" class="embed-responsive embed-responsive-16by9">\
- //                            <video autoplay loop class="embed-responsive-item">\
- //                                 <source src='+downloadLink+'.mp4' +'type=video/mp4>\
- //                            </video> \
- //                            </div> ';
-
     
  $(document).ready(function() {
-        // $('#loading').hide();
-        // document.getElementById('myVideo').style.display='none';
-        // document.getElementById('downloadButton').style.display='none';
-        // document.getElementById('trackUploadSuccess').style.display='none';
-        // document.getElementById('imageUploadSuccess').style.display='none';
-        // document.getElementById('imageOption').style.display='none';
-        // document.getElementById('warning').style.display='none';
-        // document.getElementById('warningDuplicate').style.display='none';
-        // document.getElementById('warningLargeFile').style.display='none';
-        // document.getElementById('warningImage').style.display='none';
+        //$('#loading').hide();
 
-        $("#myVideo").hide();
-        $("#downloadButton").hide();
-        $("#trackUploadSuccess").hide();
-        $("#imageUploadSuccess").hide();
-        $("#warning").hide();
-        $("#imageOption").hide();
-        $("#warningImage").hide();
-        $("#warningDuplicate").hide();
-        $("#warningLargeFile").hide();
-        $("#warningImage").hide();
+        document.getElementById('myVideo').style.display='none';
+        document.getElementById('downloadButton').style.display='none';
+        document.getElementById('trackUploadSuccess').style.display='none';
+        document.getElementById('imageUploadSuccess').style.display='none';
+        document.getElementById('imageOption').style.display='none';
+        document.getElementById('warning').style.display='none';
+        document.getElementById('warningDuplicate').style.display='none';
+        document.getElementById('warningLargeFile').style.display='none';
+        document.getElementById('warningImage').style.display='none';
+
+        var downloadLink="";
+        var download=1;
+        var imageUploaded=1;
+        var trackUploaded=1; 
+        var convertPressed=1;
+        var duplicateValue=1; 
+        var overSizedTrack=1;
+
+        // $("#myVideo").hide();
+        // $("#downloadButton").hide();
+        // $("#trackUploadSuccess").hide();
+        // $("#imageUploadSuccess").hide();
+        // $("#warning").hide();
+        // $("#imageOption").hide();
+        // $("#warningImage").hide();
+        // $("#warningDuplicate").hide();
+        // $("#warningLargeFile").hide();
+        // $("#warningImage").hide();
 
 
         //TU means 'track uploaded'
@@ -110,7 +110,7 @@
         var track=checkTrackUpload();
        var image;
         //alert(track);
-       alert("image = " + image + " track " + track); 
+     //  alert("image = " + image + " track " + track); 
 
        if(track===true && IU == 'block'){
          image=checkImageUpload();
@@ -150,12 +150,12 @@
     function checkImageUpload(){
         if(document.getElementById('imageUpload').style.display='block' && (localStorage.getItem("imageUploaded" )== 1 || localStorage.getItem("imageUploaded") == null) ){
           //alert(localStorage.getItem("imageUploaded"));
-          alert(document.getElementById('imageUpload').style.display);
+        //  alert(document.getElementById('imageUpload').style.display);
            showImageWarning();
             return false;
         }
         else{
-            alert("hi");
+           // alert("hi");
             hideImageWarning();
             return true;
         }
@@ -219,7 +219,7 @@
         hideImageWarning();
        }
 
-       alert("ImageUpload (IU) is " + IU);         
+     //  alert("ImageUpload (IU) is " + IU);         
     }
 
     function hideFileUploadContent(){
