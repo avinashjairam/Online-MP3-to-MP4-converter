@@ -1,11 +1,5 @@
-<script type="text/javascript">
-     var downloadLink="";
-    var download=1;
-    var imageUploaded=1;
-    var trackUploaded=1; 
-    var convertPressed=1;
-    var duplicateValue=1; 
-    var overSizedTrack=1;
+<script src="./js/initialValues.js" type="text/javascript">
+
 
 </script>
 
@@ -66,7 +60,6 @@ $_SESSION['timeout'] = time();
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 //Insert Database connection
-
 
 
  $makeDirectory = "mkdir $sessionId";        
@@ -514,7 +507,7 @@ function checkAllowedTypes($type){
            
         <div class="container contentContainer">            
                 <div class = "row">
-                                       
+                    
                       <!--   <a href="" id ="downloadButton" class="btn btn-lg btn-success" download>Download My Converted MP4</a> -->
                       <a href="" id ="downloadButton" class="btn btn-lg btn-success" download><span class="glyphicon glyphicon-download-alt"></span> Click Here to Download Your Converted MP4</a>
                        <div class="col-md-6 col-md-offset-3" id="download">  
