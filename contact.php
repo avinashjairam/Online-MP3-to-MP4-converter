@@ -1,7 +1,11 @@
 <?php
 
-  ini_set('display_errors',1);
-  error_reporting(E_ALL);
+  // ini_set('display_errors',1);
+  // error_reporting(E_ALL);
+
+  error_reporting(-1);
+ini_set('display_errors', 'On');
+set_error_handler("var_dump");
 
   $name = "";
   $email = "";
@@ -22,7 +26,7 @@
         $to = 'avinash.jairam@gmail.com'; 
         $subject = 'Message from Contact Demo ';
 
-        
+        mail("avinash.jairam@gmail.com","hi", "Hello", "asdfasdfasdf");
         
         $body = "From: $name\n E-Mail: $email\n Message:\n $message";
  
@@ -51,6 +55,7 @@ if (!$errName && !$errEmail && !$errMessage && !$errHuman) {
         $result='<div class="alert alert-success">Thank You! I will be in touch</div>';
     } else {
         $result='<div class="alert alert-danger">Sorry there was an error sending your message. Please try again later</div>';
+        print_r(error_get_last()) ;
     }
 }
     }
