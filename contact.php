@@ -66,7 +66,7 @@ if (!$errName && !$errEmail && !$errMessage && !$errHuman) {
 <html lang="en">
     <head>
         <meta charset="UTF-8"/>
-        <title>About</title>
+        <title>Contact</title>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
         <link href="./css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
         <link href="./css/stylesheet1.css" media="all" rel="stylesheet" type="text/css" />
