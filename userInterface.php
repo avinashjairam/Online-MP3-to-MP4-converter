@@ -251,17 +251,16 @@ if(isset($_FILES['image'])){
 
 
 <?php
-    
+
+
+//If the user clicks convert, set the trackUploaded flag to true    
 if(isset($_POST['convert'])){
 
 ?>
 
- <script>
-          //  imageUploaded= <?php echo json_encode($imageUploaded); ?>;
-    
+ <script>     
+    //Passing the track uploaded flag to javascript
     localStorage.setItem("trackUploaded", trackUploaded);
-
-
  </script>
 
 
@@ -269,18 +268,29 @@ if(isset($_POST['convert'])){
 
 
 <?php
+    //If no track is uploaded, exit the program 
     if(isset($_GET['TU']) == 1 ){
-        echo "<script> noTrackUploaded(); </script>";
-        exit();
+         exit();
     } 
-   // echo "Convert Pressed";
+   
     $convertPressed =0;
-   // echo "The name of the file is ".$theFile."<br>";
     $query = "SELECT * FROM `filesToConvert` WHERE `id` = (SELECT MAX(ID) FROM `filesToConvert`)";  
     $result=mysqli_query($link, $query);
     $row = mysqli_fetch_array($result);
+
     $theFile=$row['fileName'];
     $fileWithoutExtension=substr($theFile,0,-4);
+
+    /*LEFT
+
+
+    OFF 
+
+
+
+    HERE
+
+    */
     $imageQuery = "SELECT * FROM `mp4Pics` WHERE `id` = (SELECT MAX(ID) FROM `mp4Pics`)";   
     $imageResult= mysqli_query($link, $imageQuery);
     $imageRow = mysqli_fetch_array($imageResult);
