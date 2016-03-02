@@ -51,6 +51,7 @@ When the php variables (of the same name ) are changed, so do the javascript var
 
 //Setting the session ID
  $sessionId = session_id();
+ $_SESSION['id'] ;
 
 //Setting the change directory command to 'cd' into the folder which will be created. This folder is named after the session id
  $changeDirectory = "cd $sessionId && ";
@@ -72,53 +73,47 @@ $allowedTypes = array("mp3","avi","flv","wav");
 $directory = "../fileconverter/" . $sessionId;
 
 
-
+//Uploading Track. 
 if(isset($_FILES['fileUpload'])){
-    if(!is_dir($sessionId) && isset($_SESSION['id'])){
-       // echo "creating directory";
-        //$makeDirectory = "mkdir $sessionId";        
-        //$permission = 0700;
-        exec($makeDirectory, $permission);//$_SESSION['id']
-
+    //If the upload directory (which is named after the user's session id) is not created but the session id is set, create the upload directory
+    //This is done because the the upload directory is deleted every 30 minutes by a chron job  
+    if(!is_dir($sessionId) && isset($_SESSION['id'])){      
+        exec($makeDirectory, $permission);
     }
 
     
-        //echo ;
+    //If the user's session ID is not set, create a directory named after that ID. 
     if(!isset($_SESSION['id'])){
-        exec($makeDirectory, $permission);//$_SESSION['id']
+       // exec($makeDirectory, $permission); Why am i creating the directory twice? Have no clue 
+
+        //Insert the user's session ID into the database
         $query = "INSERT INTO `sessionInfo` (`sessionId`) VALUES ('$sessionId')";
-        //echo $query;
         $result=mysqli_query($link, $query);
 
+        //Setting the global variabe 'id' to the user's session id
         $_SESSION['id'] = $sessionId;
 
         exec($makeDirectory, $permission);
     }
-
-            //echo ("{$_SESSION['id']}");
+       
+    //Setting the trackUploaded Flag to true     
     $trackUploaded=0;
-
-    //echo $result;
-
-//  echo $user->getLink();
-   // echo '<h3>hi</h3>';
+   
+    //Setting the tempName, fileName, and type of the file uploaded
     $tempName = $_FILES['fileUpload']['tmp_name'];
     $theFile = $_FILES['fileUpload']['name'];
-    
-   // echo "The name of the file is ".$theFile."'<br>'";
-    $fileWithoutExtension=substr($theFile,0,-4);
     $type = $_FILES['fileUpload']['type']; 
-//  echo "type is ". $type."<br>";
-    // $target_file = $_SERVER['DOCUMENT_ROOT']. $directory . basename($theFile);
+     
+    //Getting the file name without the extension
+    $fileWithoutExtension=substr($theFile,0,-4);
+   
     $target_file = $directory ."/". basename($_FILES["fileUpload"]["name"]);
     $trackFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-    //echo "trackfiletype ". $trackFileType."<br>";
-    // $check = getimagesize($tempName);
-    // if($check == false) {
- //        $message = "File is not an image";
- //    } 
 
-    // Check if file already exists
+
+    // Check if file already exists. If it does, the duplicateValue flag is set to true
+    //Hence, the PHP script stops and this information is passed to javascript.
+    //Message is set but is not really used. 
 
     if (file_exists($target_file)) {
         $message .= "<br>Sorry, file already exists or you didn't upload a file."; 
@@ -126,57 +121,43 @@ if(isset($_FILES['fileUpload'])){
 
      ?>   
          <script>
+            //Passing the duplicate value flag to javascript
             duplicateValue = <?php echo json_encode($duplicateValue); ?>;
-            localStorage.setItem("duplicateValue", duplicateValue);
-           // window.location.href = "http://45.79.163.144/fileconverter/userInterface.php?TU=" + localStorage.getItem("trackUploaded"); 
-            alert (localStorage.getItem("duplicateValue"));
+            localStorage.setItem("duplicateValue", duplicateValue);         
         </script>
 <?php
-
-
-
     }
-
-
-    // Check file size
+     // Check if file is oversized. If it does, the overSizedTrack flag is set to true
+    //Hence, the PHP script stops and this information is passed to javascript.
+    //Message is set but is not really used. 
     if ($_FILES['fileUpload']['size'] > 1000000) {
         $message .="<br>Sorry, your file is too large.";      
         $overSizedTrack=0; 
-
-   ?>   
+?>   
      <script>
+        //Passing the overSizedTrack flag to javascript
         overSizedTrack = <?php echo json_encode($overSizedTrack); ?>;
-        localStorage.setItem("overSizedTrack", overSizedTrack);
-       // window.location.href = "http://45.79.163.144/fileconverter/userInterface.php?TU=" + localStorage.getItem("trackUploaded"); 
-        alert (localStorage.getItem("overSizedTrack"));
+        localStorage.setItem("overSizedTrack", overSizedTrack);      
+       // alert (localStorage.getItem("overSizedTrack"));
     </script>
+
 <?php
     }
-    // Allow certain file formats
-    // if($trackFileType != "mp4"  or $trackFileType != "mp3" || $trackFileType != "avi" || $trackFileType != "flv" || $trackFileType != "wmv") {
-    //     $message .= "<br>Sorry, only audio files are allowed.";
-        
-    // }
-    // print_r(in_array($trackFileType, $allowedTypes)) ;
-    // print_r($allowedTypes);
-    //echo gettype($trackFileType);
+
+    //Backend Check if a wrong file is uploaded 
     if(!in_array($trackFileType, $allowedTypes)){
         $message .= "<br>Sorry, only audio files are allowed.";
     }
-//  echo "type is ". $type."<br>";
-    // if($trackFileType=="mp4")
-    //  echo "hello";
-    
-    if(!isset($message)){
-        $index = 1; 
+
+    //If the file is legit and the message variable contains no error message, the track is uploaded and moved to the upload directory
+    // and the track uploaded flag is passed to javascript 
+    //The name of the file is inserted into the 'filesToConvert' table in the database
+    //Also, the filename, together with the ip address of the file is inserted into the 'fileUploaders' table in the databse
+    if(!isset($message)){    
         if(move_uploaded_file($tempName, $directory ."/".$theFile)){
-            //$theFile = str_replace($trackFileType, "mp4", $theFile); 
-
-            $ipAddress= $_SERVER['REMOTE_ADDR'];
-
-            $path = $directory ."/".$theFile;
-            $path2 = $directory ."/". $theFile;
-            //echo $path2;
+          
+            $ipAddress= $_SERVER['REMOTE_ADDR'];   
+           
             $message="File uploaded successfully";
             
             $query = "INSERT INTO `filesToConvert` (`fileName`) VALUES ('". $theFile  ."')";        
@@ -184,34 +165,21 @@ if(isset($_FILES['fileUpload'])){
 
             $query = "INSERT INTO `fileUploaders` (`ipAddress`, `trackName`) VALUES ('$ipAddress', '$theFile')";
             $result = mysqli_query($link, $query);
-            //echo $result;
-
-         ?>   
+    ?>   
          <script>
+            //Passing the trackUploaded flag to JavaScript
             trackUploaded= <?php echo json_encode($trackUploaded); ?>;
             localStorage.setItem("trackUploaded", trackUploaded);
-           // window.location.href = "http://45.79.163.144/fileconverter/userInterface.php?TU=" + localStorage.getItem("trackUploaded"); 
-
-            alert (localStorage.getItem("trackUploaded"));
-
+          //  alert (localStorage.getItem("trackUploaded"));
         </script>
-<?php
-          
+
+<?php          
         }
-      
-
-      
-       
-
-
-
-        else{
+         else{
             $error = $_FILES['fileUpload']['error'];
-            $message = getFileUploadError($error);
-        }
-        
+            $message += getFileUploadError($error);
+        }        
     }
-   // echo $message; 
 }
 
 
@@ -266,7 +234,7 @@ if(isset($_FILES['image'])){
         }
         else{
             $error = $_FILES['image']['error'];
-            $message =getFileUploadError($error);
+            $message = getFileUploadError($error);
         }
     }
   //  echo $message; 
