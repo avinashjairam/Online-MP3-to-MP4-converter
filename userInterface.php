@@ -1,31 +1,43 @@
+<!-- Javascript code which resets certain variables each time the page is loaded
+The values of these variables determine which divs will be displayed 
+By default, 1 represents false and 0 represents true. E.g. if 'download=1', it means that there isn't 
+a file to download and the modal which displays the download link remains hidden. The PHP code has variables of the same name.
+When the php variables (of the same name ) are changed, so do the javascript variables.-->
+
+
 <script type="text/javascript">
-     var downloadLink="";
+    var downloadLink="";
     var download=1;
     var imageUploaded=1;
     var trackUploaded=1; 
     var convertPressed=1;
     var duplicateValue=1; 
     var overSizedTrack=1;
-
 </script>
 
+<!-- PHP code  -->
 <?php
+
+//Starting session
  session_start(); 
 
  global $sessionId;
- global $theFile;
+ global $theFile;       //the uploaded file name
  global $trackFileType;
  global $fileWithoutExtension;
  global $tempName;
- global $changeDirectory; 
+ global $changeDirectory; //This stores the change directory linux command
+
+ //Same variables named in the above javascript
  global $download;
  global $imageUploaded;
  global $trackUploaded;
  global $ipAddress;   //IP Address 
  global $duplicateValue;
  global $overSizedTrack;
- //global $HTTP_X_FORWARDED_FOR;
+ global $message;
 
+//Initializing variables as false 
  $download=1;
  $imageUploaded=1;
  $trackUploaded=1;
@@ -34,48 +46,31 @@
  $overSizedTrack=1;
  $result="";
  
- global $message;
-
+ //Storing the IP Address of the user
  $ipAddress= $_SERVER['REMOTE_ADDR'];
 
-$inactive = 10;
-
-$sessionLife = time() - $_SESSION['timeout'];
-//echo $sessionLife."<br>";
-
-if($sessionLife > $inactive){
-    //echo"<script>alert('session timeout');</script>";
-}
-
-$_SESSION['timeout'] = time();
-
-
-//echo $_session['timeout'];
-
+//Setting the session ID
  $sessionId = session_id();
- $_SESSION['id'] ;
 
-//echo $_SESSION['id'];
-
- //echo $sessionId;
+//Setting the change directory command to 'cd' into the folder which will be created. This folder is named after the session id
  $changeDirectory = "cd $sessionId && ";
 
-// echo $sessionId;
-//echo $output;
-
-ini_set('display_errors',1);
-error_reporting(E_ALL);
 //Insert Database connection
 
 
+//Setting the make directory command to make a directory after the user's session ID
+$makeDirectory = "mkdir $sessionId";        
 
- $makeDirectory = "mkdir $sessionId";        
+//Setting the permissions for the directory created
 $permission = 0700;
 
 
+//Setting the upload file times. However, the front end only caters for mp3 files. Also, the check for uploaded mp3 files is done on the fron end.
 $allowedTypes = array("mp3","avi","flv","wav"); 
+
+//Setting the file upload path. This path is the folder named after the user's session id
 $directory = "../fileconverter/" . $sessionId;
-//echo '<h3>hi</h3>';
+
 
 
 if(isset($_FILES['fileUpload'])){
