@@ -176,6 +176,7 @@ if(isset($_FILES['fileUpload'])){
 <?php          
         }
          else{
+            //Getting the file upload error and appending it to the error message
             $error = $_FILES['fileUpload']['error'];
             $message += getFileUploadError($error);
         }        
@@ -183,40 +184,42 @@ if(isset($_FILES['fileUpload'])){
 }
 
 
-
-
-
-
+//Uploading image 
 
 
 if(isset($_FILES['image'])){
-//   exec('mkdir $sessionId',$output,$result);
+    //If the user tries the upload an image the php image flag is set to "yes"
     $image ="yes";
+
+    //Getting information from the file
     $tempName = $_FILES['image']['tmp_name'];
-    $theFile = $_FILES['image']['name'];
-    
+    $theFile = $_FILES['image']['name'];    
     $type = $_FILES['image']['type']; 
-    // $target_file = $_SERVER['DOCUMENT_ROOT']. $directory . basename($theFile);
-    $target_file = $directory ."/". basename($_FILES["image"]["name"]);
+
+    //Get the target file path
+   $target_file = $directory ."/". basename($_FILES["image"]["name"]);
+ 
+  //Get the file type
     $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+    //Check if the file is an image
     $check = getimagesize($tempName);
     if($check == false) {
         $message = "File is not an image";
     } 
-        // Check if file already exists
-    // if (file_exists($target_file)) {
-    //     $message .= "<br>Sorry, file already exists.";    
-    // }
-    // Check file size
+    
+
+    //Check how big image is     
     if ($_FILES['image']['size'] > 500000) {
         $message .="<br>Sorry, your file is too large.";       
     }
-    // Allow certain file formats
+    // Allow certain file formats. Again this is checked only on the front end 
     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
         $message .= "<br>Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
         
     }
     
+    //IF there is no error message, upload the file, and inserting the file name and ip address of uploader to the database
     if(!isset($message)){
         if(move_uploaded_file($tempName, $directory ."/".$theFile)){
             $path = $directory ."/".$theFile;
@@ -226,8 +229,8 @@ if(isset($_FILES['image'])){
             $query =  "INSERT INTO `withImage` (`ifImage`) VALUES (TRUE)";  
             $result=mysqli_query($link, $query);
 
+            //Set the image upload flag to true 
             $imageUploaded=0;
-
 
             $query = "INSERT INTO `fileUploaders` (`ipAddress`, `imageName`) VALUES ('$ipAddress', '$theFile')";
             $result = mysqli_query($link, $query);
@@ -236,18 +239,16 @@ if(isset($_FILES['image'])){
             $error = $_FILES['image']['error'];
             $message = getFileUploadError($error);
         }
-    }
-  //  echo $message; 
+    }  
 }
-
-
 
 ?>
      <script>
+        //Passing the imageUploaded flag to JavaScript
             imageUploaded= <?php echo json_encode($imageUploaded); ?>;
             localStorage.setItem("imageUploaded", imageUploaded);
-
         </script>
+
 
 <?php
     
