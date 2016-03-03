@@ -273,7 +273,12 @@ if(isset($_POST['convert'])){
          exit();
     } 
    
+    //Otherwise Prepare to add the default image and convert the file
+
+    //Setting the convert Pressed Flag to 0
     $convertPressed =0;
+
+    //Get the last file uploaded. The id of this file in the database is the max ID 
     $query = "SELECT * FROM `filesToConvert` WHERE `id` = (SELECT MAX(ID) FROM `filesToConvert`)";  
     $result=mysqli_query($link, $query);
     $row = mysqli_fetch_array($result);
@@ -281,120 +286,93 @@ if(isset($_POST['convert'])){
     $theFile=$row['fileName'];
     $fileWithoutExtension=substr($theFile,0,-4);
 
-    /*LEFT
 
-
-    OFF 
-
-
-
-    HERE
-
-    */
+    //Get the last pic uploaded by searching the database
     $imageQuery = "SELECT * FROM `mp4Pics` WHERE `id` = (SELECT MAX(ID) FROM `mp4Pics`)";   
     $imageResult= mysqli_query($link, $imageQuery);
     $imageRow = mysqli_fetch_array($imageResult);
-    $image = $imageRow['pic'];//HUGE MISTAKE HERE, IMPROPER USE OF VARIABLES 
+    $image = $imageRow['pic'];
+
+
+    //Get the last choice entered by the user. If the user wishes to upload an image, a value is set in the 'withImage' table
     $useImage = "SELECT * FROM `withImage` WHERE `id` = (SELECT MAX(ID) FROM `withImage`)";
     $imageResult= mysqli_query($link, $useImage);
     $imageRow = mysqli_fetch_array($imageResult);
-    //$doImage = $imageRow['ifImage'];
-    //echo $theFile;
+ 
+    //Getting the image flag from the 'with Image Table'
     $query = "SELECT * FROM withImage";
     $imageResult = mysqli_query($link,$query);
+
+    //If there is a row in the table, it means the user wishes to add his own image, otherwise the default image is used. 
     $num_rows    = mysqli_num_rows($imageResult);
-    //$go = 0;
+
     $currentId = $imageRow['id'];
     
+    //If there are no rows, go is set to 0. Hence, the default image is used. Otherwise, the user is prompted to use a custom image. 
     if($num_rows == 0){
         $go = 0;
-       // echo "go is ". $go;
     }
     else{
         $go = 1; 
     }
     
-    if($go == 0){
-        // if(function_exists('exec')) {
-        //     echo "exec is enabled";
-        // }
+    //This if statement evaluates to true if the user chooses not to upload an image
+    if($go == 0){    
+        //shell command which converts the mp3 file and adds the default image as the background. The default image here is image.jpg
         $defaultConversion = "$changeDirectory ffmpeg -loop 1 -i ../image.jpg -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 -pix_fmt yuv420p \"" . $fileWithoutExtension."\".mp4";
-    //    echo "no " .$defaultConversion;
-        //exec("cd fileconverter && " .$defaultConversion);
+
         exec($defaultConversion, $output,$return);
-    //        echo "<br>Return is ". $return;
-      //      echo 'Download';
+    
+        //If the shell command was successfully executed, $return is set to zero. If return is set to 0, the user can now download the file and the $download flag is set to 0 and passed to javascript
         if($return==0)
             $download=0;
 
         ?>
 
          <script>
+            //Passing the download flag to javascript
              download = <?php echo json_encode($download); ?>;
 
              downloadLink=<?php echo json_encode($sessionId."/".$fileWithoutExtension); ?>;
 
              convertPressed = <?php echo json_encode($convertPressed); ?>;
+
+             //Resetting the trackuploaded flag to false. 
              localStorage.setItem("trackUploaded", 1);
-            // alert(downloadLink);
-
-
-          </script>
+        </script>
  
-
-  <!--     <div class="modal hide fade" id="myModal">
-          <div class="modal-header">
-            <a class="close" data-dismiss="modal">×</a>
-            <h3>Modal header</h3>
-          </div>
-          <div class="modal-body">
-             <a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"
-          </div>
-          <div class="modal-footer">
-            <a href="#" class="btn">Close</a>
-            <a href="#" class="btn btn-primary">Save changes</a>
-          </div>
-         </div> -->
-       
-
-        
-
-            
-       
-       
-            <!-- This link opens in a new tab but the download link doesn't work -->
-            <!-- <a href="#" onclick="window.open('http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4','_blank');window.close();return false" target="_blank" download>Download here</a>"; -->
-    
-
-
-        <?php 
+    <?php 
         
     }
     else{
+
+        //If the user uploads an image, this line stores the convert to mp4 command together with the custom image $image 
         $imageConversion = "$changeDirectory ffmpeg -loop 1 -i \"". $image ."\" -i \"" . $theFile."\" -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest -vf scale=800:400 -pix_fmt yuv420p \"" . $fileWithoutExtension."\".mp4";
-      //  echo "yes ". $imageConversion;
-        //exec("cd fileconverter && " .$defaultConversion);
+  
         exec($imageConversion, $output,$return);
-   //     echo " Return is ". $return;
+
+        //If the shell command was successfully executed, $return is set to zero. If return is set to 0, the user can now download the file and the $download flag is set to 0 and passed to javascript
         if($return==0)          
             $download=0;
-            ?>
-        <!-- <a href=" http://45.79.163.144/fileconverter/<?php echo $sessionId."/".$fileWithoutExtension ?>.mp4" target="_blank" download>Download here</a>"; -->
+    ?>
+       
         <script>
-        //     $('#myModal').modal('show');
+             //Passing the download flag to javascript
             download = <?php echo json_encode($download); ?>;
             downloadLink=<?php echo json_encode($sessionId."/".$fileWithoutExtension); ?>;
-         </script> 
+        </script> 
 
-     
-            
-        <?php
+                 
+    <?php
+        //Deleting the image flag from the 'withImage Database'
         $query = "DELETE FROM `withImage` WHERE `id` = ". $currentId ;
-      //  echo "<br>".$query;
         mysqli_query($link, $query);
-        //$imageRow = mysqli_fetch_array($imageResult);
+     
     }
 }
+
+//getFileUploadError simply maps the error returned from the file upload process to an user friendly error message
+//The message is then returned
 function getFileUploadError($error){
         $uploadError = array( 
             UPLOAD_ERR_OK           => "There is no error.",
@@ -408,11 +386,9 @@ function getFileUploadError($error){
         );
         return $uploadError[$error];
 }
-function session_valid_id($session_id){
-    return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $session_id) > 0;
-}
-function checkAllowedTypes($type){
-}
+
+
+
 ?>
 
 
