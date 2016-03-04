@@ -610,15 +610,25 @@ function getFileUploadError($error){
 
      });
 
+
+//This function is called when the user clicks convert
+//If the user uploads a track and chooses not to upload a track, it returns true and the file conversion happens
+//However, If the user uploads a track, and chooses to upload an image, but does not do so, this function returns
+//false and the file conversion does not happen
+
     function checkUpload(){
        var track=checkTrackUpload();
        var image;
 
+    //IU is the image upload flag. If its value is 'block,' that means that the user has selected to upload
+    //an image but did not upload that image when he pressed convert. After the user uploads the image file or checks 'no' the IU flag
+    //is changed to 'none'
        if(track===true && IU == 'block'){
          image=checkImageUpload();
          return false;
        }
 
+       //If the use has uploaded a track and image or just a track and has selected 'no' to uploading an image
        if(track==true && IU == 'none'){
          return true;
        }    
@@ -628,6 +638,8 @@ function getFileUploadError($error){
     }
 
 
+    //This function checks that the user has uploaded a track when he clicks convert. If the user hasn't
+    // this function displays a warning
     function checkTrackUpload(){
           
     if(localStorage.getItem("trackUploaded") == 1 || localStorage.getItem("trackUploaded") === null ) {
@@ -643,13 +655,10 @@ function getFileUploadError($error){
 
     function checkImageUpload(){
         if(document.getElementById('imageUpload').style.display='block' && (localStorage.getItem("imageUploaded" )== 1 || localStorage.getItem("imageUploaded") == null) ){
-          //alert(localStorage.getItem("imageUploaded"));
-        //  alert(document.getElementById('imageUpload').style.display);
-           showImageWarning();
+            showImageWarning();
             return false;
         }
         else{
-           // alert("hi");
             hideImageWarning();
             return true;
         }
@@ -658,68 +667,53 @@ function getFileUploadError($error){
 
     }
 
+    //Function which displays the image warning div when called
     function showImageWarning(){
         document.getElementById('warningImage').style.display='block';
     }
 
+    //Function which hides the image warning div when called. 
     function hideImageWarning(){
         document.getElementById('warningImage').style.display='none';
     }
 
-    function hideUploadTrack(){
-        // document.getElementById("trackUploadSuccess").style.display="none";
-     //    var elem1 = document.createElement("img");
-     //    elem1.setAttribute("src", "./img/successful-track-upload.JPG");     
-     //    elem1.setAttribute("alt", "Track uploaded successfully");
-     //    document.getElementById("uploadTrack").innerHtml='';
-     // document.getElementById("uploadTrack").appendChild(elem1);
+    //This function hides the upload track form when called. This is called 
+    //after a user has successfully uploaded a track
+    function hideUploadTrack(){   
      document.getElementById("uploadTrack").style.display="none";
      document.getElementById("trackUploadSuccess").style.display="block";
     }
 
-    function hideUploadImage(){
-        // document.getElementById("imageOption").style.display="none";
-        //  var elem2 = document.createElement("img");
-        // elem2.setAttribute("src", "./img/successful-image-upload.JPG");     
-        // elem2.setAttribute("alt", "Image uploaded successfully");
-        // document.getElementById("imageOption").innerHtml='';
-        // document.getElementById("imageOption").appendChild(elem2);
-        // document.getElementById("imageOption").style.display="block";
+      //This function hides the upload image form when called. This is called 
+    //after a user has successfully uploaded an image
+    function hideUploadImage(){     
         document.getElementById("uploadTrack").style.display="none";
         document.getElementById("imageOption").style.display="none";
         document.getElementById("trackUploadSuccess").style.display="block"; 
         document.getElementById("imageUploadSuccess").style.display="block";
-    }
+    }         
 
 
+    //This function displays the image upload form when the user checks the appropriate radio button
+   function showImageUpload(e){
+        document.getElementById('imageUpload').style.display=e.checked && e.id =='yes' ? 'block' : 'none';         
 
-
-                            
-
-
-    var myEl = document.getElementById('convert');
-
-   
-
-    function showImageUpload(e){
-        document.getElementById('imageUpload').style.display=e.checked && e.id =='yes' ? 'block' : 'none';  
-
-        //IU = localStorage.setItem(document.getElementById('imageUpload').style.display);
-       // alert(document.getElementById('imageUpload').style.display);
 
        IU=document.getElementById('imageUpload').style.display;
 
        if(IU=='none'){
         hideImageWarning();
        }
-
-     //  alert("ImageUpload (IU) is " + IU);         
+      
     }
 
+    //This function hides both the image and track upload sections when called.
     function hideFileUploadContent(){
         document.getElementById('fileUpload').style.visibility='hidden';
     }
    
+
+    //These are JQuery plugin which sets file upload features
 
     $(document).on('ready', function() {
         $("#input-21").fileinput({
@@ -737,11 +731,6 @@ function getFileUploadError($error){
 
         });
     });
-
-
-
-
-
 
     $("#file-0").fileinput({
         'allowedFileExtensions' : ['jpg', 'png','gif'],
