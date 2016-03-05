@@ -213,7 +213,7 @@ if(isset($_FILES['image'])){
     
 
     //Check how big image is     
-    if ($_FILES['image']['size'] > 0) {
+    if ($_FILES['image']['size'] > 10485760) {
         $message .="<br>Sorry, your file is too large."; 
         $overSizedImage=0; 
        // echo "over sized image";
@@ -655,7 +655,8 @@ function getFileUploadError($error){
        var track=checkTrackUpload();
        var image;
 
-       if(document.getElementById("warningLargeImage").style.display='block'){
+      //If the file upload warning is displayed and the user has selected to upload an image but doesn't do so and presses convert, return false
+       if(document.getElementById("warningLargeImage").style.display='block' && (document.getElementById("yes").checked===true) ){
             showImageWarning();
             return false;
        }
