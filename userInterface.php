@@ -13,6 +13,7 @@ When the php variables (of the same name ) are changed, so do the javascript var
     var convertPressed=1;
     var duplicateValue=1; 
     var overSizedTrack=1;
+    var overSizedImage=1;
 </script>
 
 <!-- PHP code  -->
@@ -35,6 +36,7 @@ When the php variables (of the same name ) are changed, so do the javascript var
  global $ipAddress;   //IP Address 
  global $duplicateValue;
  global $overSizedTrack;
+ global $overSizedImage;
  global $message;
 
 //Initializing variables as false 
@@ -44,6 +46,7 @@ When the php variables (of the same name ) are changed, so do the javascript var
  $convertPressed=1;
  $duplicateValue=1;
  $overSizedTrack=1;
+ $overSizedImage=1;
  $result="";
  
  //Storing the IP Address of the user
@@ -130,16 +133,16 @@ if(isset($_FILES['fileUpload'])){
      // Check if file is oversized. If it does, the overSizedTrack flag is set to true
     //Hence, the PHP script stops and this information is passed to javascript.
     //Message is set but is not really used. 
-    if ($_FILES['fileUpload']['size'] > 1000000) {
-        $message .="<br>Sorry, your file is too large.";      
+    if ($_FILES['fileUpload']['size'] > 262144000) {
+        $message .="<br>Sorry, your file is too large.";    
+     
         $overSizedTrack=0; 
 ?>   
      <script>
         //Passing the overSizedTrack flag to javascript
         overSizedTrack = <?php echo json_encode($overSizedTrack); ?>;
-        localStorage.setItem("overSizedTrack", overSizedTrack);      
-       // alert (localStorage.getItem("overSizedTrack"));
-    </script>
+        localStorage.setItem("overSizedTrack", overSizedTrack);  
+      </script>
 
 <?php
     }
@@ -210,8 +213,22 @@ if(isset($_FILES['image'])){
     
 
     //Check how big image is     
-    if ($_FILES['image']['size'] > 500000) {
-        $message .="<br>Sorry, your file is too large.";       
+    if ($_FILES['image']['size'] > 10485760) {
+        $message .="<br>Sorry, your file is too large."; 
+        $overSizedImage=0; 
+       // echo "over sized image";
+
+
+?>
+    <script>
+        //Passing the overSizedImage flag to javascript
+        overSizedImage = <?php echo json_encode($overSizedImage); ?>;
+        localStorage.setItem("overSizedImage", overSizedImage);  
+     </script>
+
+
+
+<?php       
     }
     // Allow certain file formats. Again this is checked only on the front end 
     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
@@ -245,9 +262,9 @@ if(isset($_FILES['image'])){
 ?>
      <script>
         //Passing the imageUploaded flag to JavaScript
-            imageUploaded= <?php echo json_encode($imageUploaded); ?>;
-            localStorage.setItem("imageUploaded", imageUploaded);
-        </script>
+        imageUploaded= <?php echo json_encode($imageUploaded); ?>;
+        localStorage.setItem("imageUploaded", imageUploaded);
+    </script>
 
 
 <?php
@@ -466,7 +483,7 @@ function getFileUploadError($error){
                 <!--Successfull track upload message -->
                 <div class="row">                   
                      <div class="col-sm-12" id="trackUploadSuccess">                       
-                        <a href="#" class="btn btn-block btn-success"><span class="glyphicon glyphicon-ok"></span>  File Uploaded Successfully</a>
+                        <a href="#" class="btn btn-block btn-success"><span class="glyphicon glyphicon-ok"></span>  Track Uploaded Successfully</a>
                          <br>
                     </div>
                 </div>
@@ -519,7 +536,11 @@ function getFileUploadError($error){
              </div>
 
              <div id ="warningLargeFile" class="alert alert-danger">
-                <strong>Warning!</strong> The file you uploaded exceeds our limit of 1GB. Please upload a smaller file! 
+                <strong>Warning!</strong> The track you uploaded exceeds our limit of 200MB. Please upload a smaller file! 
+             </div>
+
+               <div id ="warningLargeImage" class="alert alert-danger">
+                <strong>Warning!</strong> The image you uploaded exceeds our limit of 10MB. Please upload a smaller image! 
              </div>
 
             <br><br>
@@ -563,6 +584,7 @@ function getFileUploadError($error){
         document.getElementById('warning').style.display='none';
         document.getElementById('warningDuplicate').style.display='none';
         document.getElementById('warningLargeFile').style.display='none';
+        document.getElementById('warningLargeImage').style.display='none';
         document.getElementById('warningImage').style.display='none';
 
    
@@ -590,7 +612,18 @@ function getFileUploadError($error){
 
         //Show alert if an oversized file is uploaded
         if(overSizedTrack==0){
-            document.getElementById("overSizedTrack").style.display='block';
+            document.getElementById("warningLargeFile").style.display='block';
+        }
+
+        //Show alert if an oversized image is uploaded
+        if(overSizedImage==0){
+            document.getElementById("warningLargeImage").style.display='block';           
+           document.getElementById("imageOption").style.display='block';
+            document.getElementById("yes").checked=true; 
+            document.getElementById("imageUpload").style.display='block';         
+            hideUploadTrack();
+            showImageUpload();
+            //alert("over sized image");
         }
 
         //If the download flag is true, set and display the download link and div
