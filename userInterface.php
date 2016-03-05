@@ -213,7 +213,7 @@ if(isset($_FILES['image'])){
     
 
     //Check how big image is     
-    if ($_FILES['image']['size'] > 10485760) {
+    if ($_FILES['image']['size'] > 0) {
         $message .="<br>Sorry, your file is too large."; 
         $overSizedImage=0; 
        // echo "over sized image";
@@ -592,6 +592,8 @@ function getFileUploadError($error){
         //TU means 'track uploaded'
         var TU = localStorage.getItem("trackUploaded");
 
+        var IU = localStorage.getItem("imageUploaded");
+
   
         //If a track is uploaded, ask the user if he wants to upload an image. Display the appropriate div 
          if(trackUploaded==0){
@@ -653,15 +655,22 @@ function getFileUploadError($error){
        var track=checkTrackUpload();
        var image;
 
+       if(document.getElementById("warningLargeImage").style.display='block'){
+            showImageWarning();
+            return false;
+       }
+
     //IU is the image upload flag. If its value is 'block,' that means that the user has selected to upload
     //an image but did not upload that image when he pressed convert. After the user uploads the image file or checks 'no' the IU flag
     //is changed to 'none'
+
+        
        if(track===true && IU == 'block'){
          image=checkImageUpload();
          return false;
        }
 
-       //If the use has uploaded a track and image or just a track and has selected 'no' to uploading an image
+       //If the user has uploaded a track and image or just a track and has selected 'no' to uploading an image
        if(track==true && IU == 'none'){
          return true;
        }    
@@ -687,10 +696,18 @@ function getFileUploadError($error){
     }
 
     function checkImageUpload(){
+        alert("check image upload");
+        //  if(document.getElementById('imageUpload').style.display='block'){
+        //     alert("upload a track");
+        //      showImageWarning();
+        //     return false;
+        // }
+
         if(document.getElementById('imageUpload').style.display='block' && (localStorage.getItem("imageUploaded" )== 1 || localStorage.getItem("imageUploaded") == null) ){
             showImageWarning();
             return false;
         }
+
         else{
             hideImageWarning();
             return true;
