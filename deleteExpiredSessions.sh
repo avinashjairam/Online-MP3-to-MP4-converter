@@ -4,7 +4,7 @@
 <?php
 
 	//Database connection link	
-	$link = mysqli_connect("localhost", "avi", "avi","cl55-steel");
+	$link = mysqli_connect("localhost", "", "","");
 
 	//printf(mysqli_connect_error());
 	//Array to hold the ids of the expired sessions
